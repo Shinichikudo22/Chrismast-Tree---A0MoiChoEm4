@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASCII Christmas Tree 3D - Thắp Sáng Cây Thông Gây Quỹ</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #080a10;
+      color: #c8d2e6;
+      font-family: Consolas, Menlo, "Courier New", monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+    #wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+    }
+    canvas {
+      display: block;
+      background: #080a10;
+      cursor: grab;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+
+    /* Cụm nút điều khiển góc dưới phải */
+    #controls {
+      position: fixed;
+      bottom: 14px;
+      right: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      z-index: 10;
+      opacity: 0.82;
+      transition: opacity 0.2s;
+    }
+    #controls:hover {
+      opacity: 1;
+    }
+    button {
+      background: rgba(255, 255, 255, 0.08);
+      color: #d0daf0;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 6px;
+      padding: 6px 11px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    button:hover {
+      background: rgba(255, 196, 90, 0.2);
+      border-color: #ffc45a;
+      color: #fff;
+    }
+
+    /* Bảng tiến độ gây quỹ & tìm vị trí người mua */
+    #fundraiserBox {
+      position: fixed;
+      top: 12px;
+      left: 14px;
+      z-index: 20;
+      width: 315px;
+      max-width: calc(100vw - 28px);
+      background: rgba(12, 16, 26, 0.86);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 196, 90, 0.3);
+      border-radius: 10px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+    #fundraiserHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .campaign-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: #ffc45a;
+    }
+    .progress-wrap {
+      position: relative;
+      margin-top: 7px;
+      background: rgba(255, 255, 255, 0.09);
+      border-radius: 99px;
+      height: 7px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff5b62, #ffc45a, #4cd97b);
+      transition: width 0.4s ease;
+    }
+    /* Vạch mốc 50% trên thanh tiến độ */
+    .milestone-tick {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.65);
+    }
+    .progress-meta {
+      margin-top: 5px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #b4c0d8;
+    }
+    .milestone-row {
+      margin-top: 6px;
+      display: flex;
+      gap: 6px;
+      font-size: 10.5px;
+    }
+    .ms-pill {
+      flex: 1;
+      text-align: center;
+      padding: 3px 5px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #7e8aa3;
+    }
+    .ms-pill.unlocked {
+      background: rgba(255, 196, 90, 0.16);
+      border-color: rgba(255, 196, 90, 0.55);
+      color: #ffe28a;
+      font-weight: bold;
+    }
+
+    #fundraiserBody {
+      margin-top: 10px;
+      display: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 9px;
+    }
+    #fundraiserBox.open #fundraiserBody {
+      display: block;
+    }
+    .quota-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      margin-bottom: 8px;
+      font-size: 10.5px;
+    }
+    .quota-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 5px;
+      padding: 3px 5px;
+      text-align: center;
+      color: #9aa7c2;
+    }
+    #searchInput {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 6px 9px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+    }
+    #searchInput:focus {
+      border-color: #ffc45a;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 4px;
+      margin-top: 7px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 3px 7px;
+      font-size: 11px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .tab-btn.active {
+      background: rgba(255, 196, 90, 0.25);
+      border-color: #ffc45a;
+      color: #fff;
+    }
+    #donorList {
+      margin-top: 8px;
+      max-height: 195px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding-right: 2px;
+    }
+    #donorList::-webkit-scrollbar {
+      width: 4px;
+    }
+    #donorList::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+    .donor-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 11.5px;
+      transition: all 0.15s;
+    }
+    .donor-item:hover,
+    .donor-item.selected {
+      background: rgba(255, 196, 90, 0.16);
+      border-color: rgba(255, 196, 90, 0.55);
+      color: #fff;
+    }
+    .donor-code {
+      color: #ffc45a;
+      font-weight: bold;
+      margin-right: 4px;
+    }
+    .donor-badge {
+      font-size: 10.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+    }
+
+    /* Tooltip nổi theo chuột */
+    #hoverTip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 25;
+      display: none;
+      background: rgba(10, 14, 24, 0.92);
+      border: 1px solid #ffc45a;
+      color: #fff;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+      transform: translate(12px, -50%);
+    }
+
+    /* Thiệp Điều Ước / Bùa May Mắn */
+    #wishModal {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(4, 6, 12, 0.55);
+      backdrop-filter: blur(3px);
+      padding: 16px;
+    }
+    #wishModal.visible {
+      display: flex;
+    }
+    .wish-card {
+      width: 100%;
+      max-width: 390px;
+      background: linear-gradient(160deg, #13192b 0%, #0d111d 100%);
+      border: 1px solid rgba(255, 196, 90, 0.55);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+      position: relative;
+      animation: popCard 0.22s ease-out;
+    }
+    @keyframes popCard {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .wish-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 3px 8px;
+      font-size: 13px;
+    }
+    .wish-tag {
+      display: inline-block;
+      font-size: 11px;
+      color: #ffc45a;
+      background: rgba(255, 196, 90, 0.14);
+      border: 1px solid rgba(255, 196, 90, 0.35);
+      padding: 3px 8px;
+      border-radius: 99px;
+      margin-bottom: 10px;
+    }
+    .wish-owner {
+      font-size: 16px;
+      font-weight: bold;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    .wish-content {
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 3px solid #ffc45a;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #e6eefc;
+      user-select: text;
+    }
+    .wish-actions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .wish-hint {
+      font-size: 11px;
+      color: #8b98b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <canvas id="screen"></canvas>
+
+    <!-- Bảng tiến độ gây quỹ & tìm vị trí người mua -->
+    <div id="fundraiserBox">
+      <div id="fundraiserHeader" title="Bấm để mở danh sách & tìm vị trí của bạn">
+        <span class="campaign-title" id="campaignTitle">🎄 THẮP SÁNG CÂY THÔNG 2026</span>
+        <button type="button" id="btnTogglePanel" style="padding: 2px 7px; font-size: 11px;">Tìm của bạn ▼</button>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="milestone-tick" title="Mốc 50%: Bật dây kim tuyến vàng"></div>
+      </div>
+      <div class="progress-meta">
+        <span id="progressText">Hoàn thành cây: 0%</span>
+        <span id="lightStatText">💡 0/168 đèn</span>
+      </div>
+      <div class="milestone-row">
+        <div class="ms-pill" id="pill50">🔒 50%: Kim tuyến vàng</div>
+        <div class="ms-pill" id="pill100">🔒 100%: Ngôi sao đỉnh</div>
+      </div>
+
+      <div id="fundraiserBody">
+        <div class="quota-grid" id="quotaGrid"></div>
+        <input type="text" id="searchInput" placeholder="Nhập tên hoặc mã (VD: MS01)..." />
+        <div class="filter-tabs">
+          <button type="button" class="tab-btn active" data-filter="all">Tất cả</button>
+          <button type="button" class="tab-btn" data-filter="charm">🧧 Bùa ước</button>
+          <button type="button" class="tab-btn" data-filter="light">💡 Cụm đèn</button>
+          <button type="button" class="tab-btn" data-filter="ornament">🎁 Quà/Châu/Tất</button>
+        </div>
+        <div id="donorList"></div>
+        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 10.5px; color: #7a859e;">Bấm tên để xoay tới vị trí</span>
+          <button type="button" id="btnClearFocus" style="padding: 3px 7px; font-size: 11px; display: none;">Bỏ chọn</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tooltip nổi theo chuột -->
+    <div id="hoverTip"></div>
+
+    <!-- Thiệp hiện điều ước khi ấn vào vật phẩm -->
+    <div id="wishModal">
+      <div class="wish-card">
+        <button type="button" class="wish-close" id="btnCloseModal">✕</button>
+        <div class="wish-tag" id="modalBadge">🧧 Bùa May Mắn</div>
+        <div class="wish-owner" id="modalOwner">Tên người gửi</div>
+        <div class="wish-content" id="modalWish">Lời chúc...</div>
+        <div class="wish-actions">
+          <span class="wish-hint">Vị trí đang phát sáng trên cây</span>
+          <button type="button" id="btnCopyLink">🔗 Chép link của tôi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Đặt file nhạc .mp3 cùng thư mục với index.html -->
+    <audio id="bgMusic" src="last-christmas.mp3" loop preload="auto"></audio>
+
+    <div id="controls">
+      <button id="btnMusic">M: Music Off</button>
+      <button id="btnPause">Space: Pause</button>
+      <button id="btnRestart">R: Restart</button>
+      <button id="btnSave">S: Save PNG</button>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      // =====================================================================
+      // 1. CẤU HÌNH CHIẾN DỊCH GÂY QUỸ (4 BÓNG ĐÈN / LƯỢT & MỐC 50% - 100%)
+      // =====================================================================
+      const CAMPAIGN = {
+        title: "🎄 THẮP SÁNG CÂY THÔNG 2026",
+        lightsPerPurchase: 4,    // Mỗi lượt mua đèn sẽ thắp sáng 1 chùm 4 bóng gần nhau (42 suất x 4 = 168 bóng)
+        showUnlitBulbs: true,    // Hiện bóng chưa mua dưới dạng chấm mờ tối chờ thắp sáng
+        message: "M E R R Y   C H R I S T M A S   2 0 2 6",
+        watermark: "@ascii.christmas",
+        // Phân bổ 137 suất chuẩn thẩm mỹ 3D & trọng số tính % hoàn thành cây (Tổng = 328 điểm = 100%)
+        quotas: {
+          light:    { max: 42, weight: 1.5, icon: "💡", short: "Đèn" },
+          bauble:   { max: 30, weight: 2.0, icon: "🔮", short: "Châu" },
+          stocking: { max: 20, weight: 2.5, icon: "🧦", short: "Tất" },
+          charm:    { max: 25, weight: 3.0, icon: "🧧", short: "Bùa" },
+          gift:     { max: 20, weight: 4.0, icon: "🎁", short: "Quà" }
+        }
+      };
+
+      // HƯỚNG DẪN MỞ KHÓA KHI CÓ LƯỢT MUA MỚI:
+      // - Xóa dấu "//" ở đầu dòng tương ứng, điền tên người mua (name) và điều ước (wish).
+      // - Có thể nhân bản thêm tối đa tới 137 dòng theo đúng giới hạn từng loại ở trên.
+      const DONORS = [
+        // --- 5 MẪU ĐANG MỞ SẴN ---
+        { id: "MS01", type: "charm",    name: "Minh Suông",   color: "jade",   wish: "Chúc chiến dịch gây quỹ thành công rực rỡ và lan tỏa thật nhiều yêu thương mùa Giáng Sinh!" },
+        { id: "MS02", type: "light",    name: "Hồng Ly",      color: "gold",   wish: "Mong mọi điều bình an, may mắn và hạnh phúc sẽ luôn mỉm cười với tất cả chúng ta." },
+        { id: "MS03", type: "gift",     name: "Mạnh Sơn",     color: "red",    wish: "Gửi một hộp quà nhỏ góp sức cùng chương trình. Merry Christmas 2026!" },
+        { id: "MS04", type: "stocking", name: "Lớp YK22C",    color: "red",    wish: "Chúc các bạn sinh viên luôn vững tay nghề, ấm áp và tràn đầy nhiệt huyết!" },
+        { id: "MS05", type: "bauble",   name: "CLB Hiến Máu", color: "gold",   wish: "Mỗi ngọn đèn sáng lên là một trái tim sẻ chia được kết nối." },
+
+        // --- CÁC SLOT CHỜ SẴN (XÓA "//" ĐỂ KÍCH HOẠT TỪNG LƯỢT MUA) ---
+        // { id: "MS06", type: "light",    name: "Người ủng hộ #06", color: "gold",   wish: "Chúc Giáng Sinh an lành và ấm áp!" },
+        // { id: "MS07", type: "charm",    name: "Người ủng hộ #07", color: "gold",   wish: "Ước cho kỳ thi sắp tới qua môn thuận lợi và đạt kết quả cao!" },
+        // { id: "MS08", type: "bauble",   name: "Người ủng hộ #08", color: "red",    wish: "Góp một quả châu đỏ cho cây thông thêm rực rỡ!" },
+        // { id: "MS09", type: "gift",     name: "Người ủng hộ #09", color: "green",  wish: "Chúc mọi điều tốt đẹp nhất sẽ đến với mọi người." },
+        // { id: "MS10", type: "stocking", name: "Người ủng hộ #10", color: "red",    wish: "Treo chiếc tất nhỏ gửi gắm niềm vui mùa lễ hội!" },
+        // { id: "MS11", type: "light",    name: "Người ủng hộ #11", color: "gold",   wish: "Thắp sáng thêm một góc cây thông yêu thương." },
+        // { id: "MS12", type: "charm",    name: "Người ủng hộ #12", color: "jade",   wish: "Cầu chúc gia đình luôn mạnh khỏe, bình an." },
+        // { id: "MS13", type: "bauble",   name: "Người ủng hộ #13", color: "silver", wish: "Giáng Sinh vui vẻ và hạnh phúc nhé!" },
+        // { id: "MS14", type: "gift",     name: "Người ủng hộ #14", color: "blue",   wish: "Một món quà nhỏ gửi tới chương trình." },
+        // { id: "MS15", type: "stocking", name: "Người ủng hộ #15", color: "red",    wish: "Chúc mùa đông này thật ấm áp!" },
+        // { id: "MS16", type: "light",    name: "Người ủng hộ #16", color: "gold",   wish: "Cùng nhau chạm mốc 50% để bật dây kim tuyến vàng nào!" },
+        // { id: "MS17", type: "charm",    name: "Người ủng hộ #17", color: "gold",   wish: "Ước mọi dự định trong năm mới đều thành hiện thực." },
+        // { id: "MS18", type: "bauble",   name: "Người ủng hộ #18", color: "gold",   wish: "Merry Christmas & Happy New Year!" },
+        // { id: "MS19", type: "gift",     name: "Người ủng hộ #19", color: "gold",   wish: "Gửi ngàn lời chúc tốt đẹp nhất tới mọi người!" },
+        // { id: "MS20", type: "stocking", name: "Người ủng hộ #20", color: "red",    wish: "Chúc chương trình lan tỏa thật nhiều niềm vui." },
+        // { id: "MS21", type: "light",    name: "Người ủng hộ #21", color: "gold",   wish: "Thêm 4 ngọn đèn nhỏ cho cây thông thêm lung linh." },
+        // { id: "MS22", type: "charm",    name: "Người ủng hộ #22", color: "jade",   wish: "Chúc tất cả chúng ta một mùa Giáng Sinh đáng nhớ." },
+        // { id: "MS23", type: "bauble",   name: "Người ủng hộ #23", color: "red",    wish: "Góp sắc đỏ may mắn cho mùa lễ hội!" },
+        // { id: "MS24", type: "light",    name: "Người ủng hộ #24", color: "gold",   wish: "Chung tay thắp sáng ngôi sao đỉnh cây!" },
+        // { id: "MS25", type: "gift",     name: "Người ủng hộ #25", color: "red",    wish: "Món quà tập thể gửi tặng chiến dịch." }
+      ];
+
+      // Tính toán % hoàn thành cây dựa trên trọng số từng vật phẩm
+      function getTreeCompletion() {
+        const maxPoints = Object.values(CAMPAIGN.quotas)
+          .reduce((sum, q) => sum + q.max * q.weight, 0);
+
+        const currentPoints = DONORS.reduce((sum, d) => {
+          const w = CAMPAIGN.quotas[d.type]?.weight || 1.5;
+          return sum + w;
+        }, 0);
+
+        // Hỗ trợ xem trước nhanh hiệu ứng mốc qua URL (?demo=50 hoặc ?demo=100)
+        const demoParam = Number(new URLSearchParams(window.location.search).get("demo"));
+        const rawPercent = Math.min(100, Math.round((currentPoints / maxPoints) * 100));
+        const percent = (demoParam === 50 || demoParam === 100) ? demoParam : rawPercent;
+        const totalSlots = Object.values(CAMPAIGN.quotas).reduce((s, q) => s + q.max, 0);
+
+        return { percent, currentPoints, maxPoints, totalSlots };
+      }
+
+      const treeStats = getTreeCompletion();
+      const HAS_TINSEL = treeStats.percent >= 50; // Mốc 50%: Bật dây kim tuyến vàng rực
+      const HAS_STAR = treeStats.percent >= 100;  // Mốc 100%: Thắp sáng ngôi sao đỉnh cây
+
+      // =====================================================================
+      // 2. CẤU HÌNH LƯỚI ASCII & THÔNG SỐ HIỂN THỊ
+      // =====================================================================
+      const canvas = document.getElementById("screen");
+      const ctx = canvas.getContext("2d");
+
+      const COLS = 96;
+      const ROWS = 74;
+      const CW = 9;
+      const CH = 14;
+      const FONT_PX = 14;
+      const RAMP = " .:-~=+*x%&#WM";
+      const TAU = Math.PI * 2;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = COLS * CW * dpr;
+      canvas.height = ROWS * CH * dpr;
+      ctx.scale(dpr, dpr);
+
+      function fitCanvas() {
+        const scale = Math.min(
+          window.innerWidth / (COLS * CW),
+          window.innerHeight / (ROWS * CH)
+        );
+        canvas.style.width = `${Math.floor(COLS * CW * scale)}px`;
+        canvas.style.height = `${Math.floor(ROWS * CH * scale)}px`;
+      }
+      window.addEventListener("resize", fitCanvas);
+      fitCanvas();
+
+      // =====================================================================
+      // 3. HÀM TOÁN HỌC & BẢNG MÀU
+      // =====================================================================
+      let seed = 7;
+      function rand() {
+        seed = (seed * 1664525 + 1013904223) % 4294967296;
+        return seed / 4294967296;
+      }
+      function uniform(a, b) {
+        return a + (b - a) * rand();
+      }
+      function gauss() {
+        let u = 0, v = 0;
+        while (u === 0) u = rand();
+        while (v === 0) v = rand();
+        return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(TAU * v);
+      }
+      function clamp(v, lo, hi) {
+        return v < lo ? lo : v > hi ? hi : v;
+      }
+      function smoothstep(x) {
+        const t = clamp(x, 0, 1);
+        return t * t * (3 - 2 * t);
+      }
+      function normalize(x, y, z) {
+        const len = Math.hypot(x, y, z) || 1;
+        return [x / len, y / len, z / len];
+      }
+      function fibSphere(n) {
+        const pts = [];
+        const golden = Math.PI * (3 - Math.sqrt(5));
+        for (let i = 0; i < n; i++) {
+          const y = 1 - (i / (n - 1)) * 2;
+          const r = Math.sqrt(Math.max(0, 1 - y * y));
+          const theta = golden * i;
+          pts.push([Math.cos(theta) * r, y, Math.sin(theta) * r]);
+        }
+        return pts;
+      }
+
+      const PALETTE_MAP = {
+        white:  [0.96, 0.98, 1.0],
+        silver: [0.86, 0.90, 0.96],
+        gold:   [1.0, 0.84, 0.25],
+        red:    [0.96, 0.18, 0.22],
+        green:  [0.16, 0.78, 0.36],
+        blue:   [0.24, 0.56, 0.98],
+        jade:   [0.20, 0.94, 0.65],
+        warm:   [1.0, 0.93, 0.68]
+      };
+      const TRUNK_COL = [0.45, 0.28, 0.15];
+      const UNLIT_COL = [0.22, 0.28, 0.40];
+
+      function resolveColor(name, fallback) {
+        return PALETTE_MAP[(name || "").toLowerCase()] || fallback;
+      }
+
+      const TYPE_META = {
+        light:    { icon: "💡", label: "Chùm 4 Đèn" },
+        bauble:   { icon: "🔮", label: "Quả Châu" },
+        gift:     { icon: "🎁", label: "Hộp Quà" },
+        stocking: { icon: "🧦", label: "Tất Giáng Sinh" },
+        charm:    { icon: "🧧", label: "Bùa May Mắn" }
+      };
+
+      // =====================================================================
+      // 4. XÂY DỰNG MÔ HÌNH 3D CÂY THÔNG & VẬT PHẨM GÂY QUỸ
+      // =====================================================================
+      const GROUND = -1.0;
+      const Y0 = -0.68;
+      const Y1 = 1.05;
+
+      const T_GROW = [1.0, 4.6];
+      const T_GARLAND = [4.8, 7.2];
+      const T_ORNAMENTS = [6.0, 9.6];
+      const T_STAR = 10.4;
+      const T_MSG = 11.4;
+
+      function envelope(y) {
+        const u = clamp((y - Y0) / (Y1 - Y0), 0, 1);
+        return 0.78 * Math.pow(1 - u, 0.82) + 0.03;
+      }
+      function growTime(y) {
+        const u = clamp((Y1 - y) / (Y1 - GROUND), 0, 1);
+        return T_GROW[0] + (T_GROW[1] - T_GROW[0]) * u;
+      }
+
+      let points = [];
+      let groundPts = [];
+      let stars = [];
+      let donorAnchors = [];
+      let bulbTargets = []; // Danh sách từng bóng đèn đã sáng để click trực tiếp
+      let totalBulbs = 0;
+      let litBulbsCount = 0;
+
+      function addPoint(x, y, z, nx, ny, nz, col, kind, t0, base = 1.0, phase = 0, cx = x, cy = y, cz = z, pop = false, donorId = null, lit = true) {
+        points.push({
+          x, y, z, nx, ny, nz,
+          r: col[0], g: col[1], b: col[2],
+          kind, t0, base, phase,
+          cx, cy, cz, pop,
+          donorId, lit
+        });
+      }
+
+      // Quả châu 3D
+      function spawnBauble(donor, slotIdx) {
+        const sphere = fibSphere(145);
+        const u = ((slotIdx * 0.6180339) % 1);
+        const y = Y0 + 0.10 + u * (Y1 - Y0 - 0.36);
+        const a = slotIdx * 2.39996 + 0.3;
+        const rEnv = envelope(y) + 0.035 * (1 - u);
+        const cx = Math.cos(a) * rEnv;
+        const cy = y - 0.03;
+        const cz = Math.sin(a) * rEnv;
+        const rad = 0.064 + 0.025 * (1 - u);
+        const col = resolveColor(donor.color, PALETTE_MAP.red);
+        const t0 = T_ORNAMENTS[0] + (slotIdx % 8) * 0.25;
+
+        for (const [sx, sy, sz] of sphere) {
+          addPoint(
+            cx + sx * rad, cy + sy * rad, cz + sz * rad,
+            sx, sy, sz, col, "BALL", t0, 1.0, 0,
+            cx, cy, cz, true, donor.id, true
+          );
+        }
+        donorAnchors.push({ donor, x: cx, y: cy, z: cz, radius: 14 });
+      }
+
+      // Tất Giáng Sinh 3D treo trên nhánh thông
+      function spawnStocking(donor, slotIdx) {
+        const u = (((slotIdx + 0.35) * 0.6180339) % 1);
+        const y = Y0 + 0.14 + u * (Y1 - Y0 - 0.42);
+        const a = slotIdx * 2.39996 + 1.18;
+        const rEnv = envelope(y) + 0.045;
+        const cx = Math.cos(a) * rEnv;
+        const cy = y - 0.04;
+        const cz = Math.sin(a) * rEnv;
+        const t0 = T_ORNAMENTS[0] + 0.4 + (slotIdx % 7) * 0.25;
+
+        const tx = -Math.sin(a), tz = Math.cos(a);
+        const rx = Math.cos(a), rz = Math.sin(a);
+        const bodyCol = resolveColor(donor.color, PALETTE_MAP.red);
+
+        for (let i = 0; i < 65; i++) {
+          const ang = (i / 65) * TAU * 3;
+          const dy = (i / 65) * 0.028;
+          const rad = 0.036;
+          const lx = Math.cos(ang) * rad;
+          const lz = Math.sin(ang) * rad;
+          addPoint(
+            cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz,
+            rx * Math.cos(ang) + tx * Math.sin(ang), 0.3, rz * Math.cos(ang) + tz * Math.sin(ang),
+            PALETTE_MAP.white, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true
+          );
+        }
+        for (let i = 0; i < 95; i++) {
+          const ang = (i / 95) * TAU * 5;
+          const dy = -(i / 95) * 0.095;
+          const rad = 0.031;
+          const lx = Math.cos(ang) * rad;
+          const lz = Math.sin(ang) * rad;
+          addPoint(
+            cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz,
+            rx * Math.cos(ang) + tx * Math.sin(ang), 0.1, rz * Math.cos(ang) + tz * Math.sin(ang),
+            bodyCol, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true
+          );
+        }
+        for (let i = 0; i < 75; i++) {
+          const ang = (i / 75) * TAU * 4;
+          const footShift = (i / 75) * 0.068;
+          const rad = 0.028 * (1 - 0.25 * (i / 75));
+          const lx = Math.cos(ang) * rad;
+          const dy = -0.095 + Math.sin(ang) * rad;
+          addPoint(
+            cx + rx * lx + tx * footShift, cy + dy, cz + rz * lx + tz * footShift,
+            rx * Math.cos(ang), Math.sin(ang), rz * Math.cos(ang),
+            bodyCol, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true
+          );
+        }
+
+        donorAnchors.push({ donor, x: cx, y: cy - 0.04, z: cz, radius: 14 });
+      }
+
+      // Bùa May Mắn (Thẻ Điều Ước) 3D đung đưa ở đầu nhánh
+      function spawnCharm(donor, slotIdx) {
+        const u = (((slotIdx + 0.7) * 0.6180339) % 1);
+        const y = Y0 + 0.18 + u * (Y1 - Y0 - 0.44);
+        const a = slotIdx * 2.39996 + 2.25;
+        const rEnv = envelope(y) + 0.065;
+        const cx = Math.cos(a) * rEnv;
+        const cy = y - 0.055;
+        const cz = Math.sin(a) * rEnv;
+        const t0 = T_ORNAMENTS[0] + 0.6 + (slotIdx % 6) * 0.25;
+        const phase = slotIdx * 1.1;
+
+        const rx = Math.cos(a), rz = Math.sin(a);
+        const tx = -Math.sin(a), tz = Math.cos(a);
+        const coreCol = resolveColor(donor.color, PALETTE_MAP.jade);
+
+        for (let s = 1; s <= 5; s++) {
+          addPoint(
+            cx, cy + 0.048 + s * 0.008, cz,
+            rx, 0.2, rz, PALETTE_MAP.gold, "CHARM_THREAD", t0, 0.9, phase,
+            cx, cy, cz, false, donor.id, true
+          );
+        }
+
+        const rows = 11;
+        for (let iy = -rows; iy <= rows; iy++) {
+          const nyNorm = iy / rows;
+          const halfW = (1 - Math.abs(nyNorm) * 0.78) * 0.044;
+          const cols = Math.max(1, Math.round(halfW / 0.007));
+          for (let ix = -cols; ix <= cols; ix++) {
+            const lx = (ix / Math.max(1, cols)) * halfW;
+            const ly = nyNorm * 0.052;
+            const isBorder = Math.abs(iy) >= rows - 1 || Math.abs(ix) >= cols - 1;
+            const isCenter = Math.abs(iy) <= 2 && Math.abs(ix) <= 1;
+            const col = isBorder ? PALETTE_MAP.gold : (isCenter ? PALETTE_MAP.white : coreCol);
+
+            for (const side of [-0.008, 0.008]) {
+              addPoint(
+                cx + tx * lx + rx * side,
+                cy + ly,
+                cz + tz * lx + rz * side,
+                rx * Math.sign(side), 0.15, rz * Math.sign(side),
+                col, "CHARM", t0, 1.05, phase,
+                cx, cy, cz, true, donor.id, true
+              );
+            }
+          }
+        }
+
+        donorAnchors.push({ donor, x: cx, y: cy, z: cz, radius: 16 });
+      }
+
+      // Hộp Quà 3D dưới gốc cây (2 vòng tròn quanh gốc: 8 hộp trong + 12 hộp ngoài)
+      function spawnGift(donor, slotIdx) {
+        const isOuter = slotIdx >= 8;
+        const ringIdx = isOuter ? slotIdx - 8 : slotIdx;
+        const ringCap = isOuter ? 12 : 8;
+        const dist = isOuter ? 1.12 : 0.78;
+        const a = (ringIdx / ringCap) * TAU + (isOuter ? 0.26 : 0.3);
+
+        const gx = Math.cos(a) * dist;
+        const gz = Math.sin(a) * dist;
+        const w = 0.26 + (slotIdx % 3) * 0.025;
+        const h = 0.21 + ((slotIdx + 1) % 3) * 0.03;
+        const d = 0.26 + ((slotIdx + 2) % 3) * 0.02;
+        const rot = a + 0.35;
+        const cosR = Math.cos(rot), sinR = Math.sin(rot);
+        const t0 = T_ORNAMENTS[0] + 0.8 + (slotIdx % 6) * 0.22;
+
+        const bodyCol = resolveColor(donor.color, PALETTE_MAP.red);
+        const ribCol = donor.color === "gold" ? PALETTE_MAP.red : PALETTE_MAP.gold;
+        const ptsOnBox = 950;
+
+        for (let i = 0; i < ptsOnBox; i++) {
+          const face = Math.floor(rand() * 5);
+          const fa = rand() - 0.5;
+          const fb = rand() - 0.5;
+          let lx, ly, lz, nx, ny, nz, isRib;
+
+          if (face === 0) {
+            lx = fa * w; ly = h; lz = fb * d;
+            nx = 0; ny = 1; nz = 0;
+            isRib = Math.abs(lx) < 0.024 || Math.abs(lz) < 0.024;
+          } else if (face === 1) {
+            lx = w / 2; ly = (fb + 0.5) * h; lz = fa * d;
+            nx = 1; ny = 0; nz = 0;
+            isRib = Math.abs(lz) < 0.024;
+          } else if (face === 2) {
+            lx = -w / 2; ly = (fb + 0.5) * h; lz = fa * d;
+            nx = -1; ny = 0; nz = 0;
+            isRib = Math.abs(lz) < 0.024;
+          } else if (face === 3) {
+            lx = fa * w; ly = (fb + 0.5) * h; lz = d / 2;
+            nx = 0; ny = 0; nz = 1;
+            isRib = Math.abs(lx) < 0.024;
+          } else {
+            lx = fa * w; ly = (fb + 0.5) * h; lz = -d / 2;
+            nx = 0; ny = 0; nz = -1;
+            isRib = Math.abs(lx) < 0.024;
+          }
+
+          const wx = gx + lx * cosR - lz * sinR;
+          const wy = GROUND + ly;
+          const wz = gz + lx * sinR + lz * cosR;
+          const rnx = nx * cosR - nz * sinR;
+          const rnz = nx * sinR + nz * cosR;
+
+          addPoint(
+            wx, wy, wz, rnx, ny, rnz,
+            isRib ? ribCol : bodyCol, "GIFT", t0, 0.95, 0,
+            gx, GROUND + h * 0.5, gz, true, donor.id, true
+          );
+        }
+
+        const bowSphere = fibSphere(48);
+        for (const [bx, by, bz] of bowSphere) {
+          addPoint(
+            gx + bx * 0.055, GROUND + h + 0.022 + by * 0.03, gz + bz * 0.055,
+            bx, by, bz, ribCol, "GIFT", t0 + 0.1, 1.0, 0,
+            gx, GROUND + h, gz, true, donor.id, true
+          );
+        }
+
+        donorAnchors.push({ donor, x: gx, y: GROUND + h * 0.55, z: gz, radius: 18 });
+      }
+
+      function buildScene() {
+        seed = 7;
+        points = [];
+        groundPts = [];
+        stars = [];
+        donorAnchors = [];
+        bulbTargets = [];
+        const tips = [];
+
+        // A. Bầu trời sao nền
+        for (let i = 0; i < 240; i++) {
+          stars.push({
+            col: Math.floor(rand() * COLS),
+            row: Math.floor(rand() * (ROWS - 12)),
+            ch: rand() < 0.28 ? "+" : rand() < 0.62 ? "*" : ".",
+            phase: rand() * TAU,
+            speed: uniform(1.5, 4.0)
+          });
+        }
+
+        // B. Mặt sàn chấm tròn
+        for (let gx = -2.4; gx <= 2.4; gx += 0.16) {
+          for (let gz = -2.4; gz <= 2.4; gz += 0.16) {
+            const dist = Math.hypot(gx, gz);
+            if (dist <= 2.45) {
+              groundPts.push({ x: gx, y: GROUND, z: gz, dist });
+            }
+          }
+        }
+
+        // C. Tán lá thông 24 tầng + Tuyết đầu cành
+        const whorls = 24;
+        for (let i = 0; i < whorls; i++) {
+          const y = Y0 + 0.02 + ((Y1 - 0.06 - (Y0 + 0.02)) * i) / (whorls - 1);
+          const u = (y - Y0) / (Y1 - Y0);
+          const R = envelope(y) + 0.05;
+          const nb = Math.floor(6 + 12 * (1 - u));
+
+          for (let b = 0; b < nb; b++) {
+            const a = (TAU * (b + 0.5 * rand())) / nb + i * 0.77;
+            const L = R * uniform(0.85, 1.08);
+            const n = Math.floor(25 + 270 * L);
+            const dx = Math.cos(a), dz = Math.sin(a);
+            const sx = -Math.sin(a), sz = Math.cos(a);
+
+            for (let k = 0; k < n; k++) {
+              const s = Math.pow(rand(), 0.65);
+              const spread = (0.025 + 0.09 * s) * gauss();
+              const sl = s * L;
+
+              const px = dx * sl + sx * spread;
+              const py = y + 0.06 * sl - 0.20 * sl * sl + 0.012 * gauss();
+              const pz = dz * sl + sz * spread;
+
+              const [nx, ny, nz] = normalize(
+                dx * 0.75 + 0.3 * gauss(),
+                0.55 + 0.3 * gauss(),
+                dz * 0.75 + 0.3 * gauss()
+              );
+              const ao = (0.32 + 0.70 * Math.pow(s, 1.3)) * uniform(0.75, 1.1);
+              const isSnow = s > 0.52 && rand() < 0.08 * s && ny > 0.45;
+
+              const col = isSnow
+                ? PALETTE_MAP.white
+                : [0.09 + 0.12 * rand(), 0.46 + 0.36 * rand(), 0.16 + 0.14 * rand()];
+
+              addPoint(
+                px, py, pz, nx, ny, nz, col,
+                isSnow ? "SNOW" : "NEEDLE",
+                growTime(y) + 0.45 * s,
+                isSnow ? 1.0 : ao
+              );
+            }
+
+            const tl = 0.93 * L;
+            tips.push([dx * tl, y + 0.06 * tl - 0.20 * tl * tl, dz * tl]);
+          }
+        }
+
+        // D. Lõi tối che mặt sau
+        for (let i = 0; i < 6000; i++) {
+          const y = Y0 + (Y1 - 0.1 - Y0) * rand();
+          const phi = rand() * TAU;
+          const r = 0.60 * envelope(y);
+          const [nx, ny, nz] = normalize(Math.cos(phi), 0.3, Math.sin(phi));
+          addPoint(Math.cos(phi) * r, y, Math.sin(phi) * r, nx, ny, nz, [0.03, 0.14, 0.06], "CORE", growTime(y) + 0.2, 0.45);
+        }
+
+        // E. Thân cây
+        for (let i = 0; i < 1500; i++) {
+          const y = GROUND + rand() * (Y0 + 0.1 - GROUND);
+          const phi = rand() * TAU;
+          const nx = Math.cos(phi), nz = Math.sin(phi);
+          const bark = 0.75 + 0.25 * Math.sign(Math.sin(phi * 30 + y * 5));
+          addPoint(nx * 0.085, y, nz * 0.085, nx, 0, nz, TRUNK_COL, "TRUNK", growTime(y), bark);
+        }
+
+        // F. MỐC 50%: Chỉ bật Dây Kim Tuyến Vàng Rực khi hoàn thành cây >= 50%
+        if (HAS_TINSEL) {
+          const garlandSteps = 2000;
+          const turns = 3.6;
+          for (let i = 0; i < garlandSteps; i++) {
+            const u = i / (garlandSteps - 1);
+            const yg = Y0 + 0.15 + (Y1 - Y0 - 0.45) * u;
+            const ag = TAU * turns * u + 0.9;
+            const swag = -0.07 * Math.abs(Math.sin(ag * 2.5));
+            const rg = envelope(yg) + 0.07;
+
+            for (let j = 0; j < 4; j++) {
+              const [nx, ny, nz] = normalize(
+                Math.cos(ag) + 0.4 * gauss(),
+                0.3 + 0.4 * gauss(),
+                Math.sin(ag) + 0.4 * gauss()
+              );
+              addPoint(
+                Math.cos(ag) * rg + 0.016 * gauss(),
+                yg + swag + 0.016 * gauss(),
+                Math.sin(ag) * rg + 0.016 * gauss(),
+                nx, ny, nz, PALETTE_MAP.gold, "TINSEL",
+                T_GARLAND[0] + u * (T_GARLAND[1] - T_GARLAND[0]),
+                0.98, rand() * TAU
+              );
+            }
+          }
+        }
+
+        // G. Phân bổ các vật phẩm trang trí của người ủng hộ
+        const lightDonors = DONORS.filter(d => d.type === "light");
+        const baubleDonors = DONORS.filter(d => d.type === "bauble");
+        const giftDonors = DONORS.filter(d => d.type === "gift");
+        const stockingDonors = DONORS.filter(d => d.type === "stocking");
+        const charmDonors = DONORS.filter(d => d.type === "charm");
+
+        baubleDonors.forEach((d, idx) => spawnBauble(d, idx));
+        giftDonors.forEach((d, idx) => spawnGift(d, idx));
+        stockingDonors.forEach((d, idx) => spawnStocking(d, idx));
+        charmDonors.forEach((d, idx) => spawnCharm(d, idx));
+
+        // H. Gom cụm 4 bóng đèn gần nhau thành 1 chùm (42 cụm x 4 bóng = 168 bóng)
+        for (let i = tips.length - 1; i > 0; i--) {
+          const j = Math.floor(rand() * (i + 1));
+          [tips[i], tips[j]] = [tips[j], tips[i]];
+        }
+        const maxBulbsPool = CAMPAIGN.quotas.light.max * CAMPAIGN.lightsPerPurchase;
+        const rawTips = tips.slice(0, Math.min(maxBulbsPool, tips.length));
+        const used = new Array(rawTips.length).fill(false);
+        const clusters = [];
+
+        for (let i = 0; i < rawTips.length; i++) {
+          if (used[i]) continue;
+          used[i] = true;
+          const seedTip = rawTips[i];
+          const group = [seedTip];
+
+          const neighbors = [];
+          for (let j = 0; j < rawTips.length; j++) {
+            if (used[j]) continue;
+            const d = Math.hypot(
+              rawTips[j][0] - seedTip[0],
+              rawTips[j][1] - seedTip[1],
+              rawTips[j][2] - seedTip[2]
+            );
+            neighbors.push({ idx: j, dist: d });
+          }
+          neighbors.sort((a, b) => a.dist - b.dist);
+
+          const need = CAMPAIGN.lightsPerPurchase - 1;
+          for (let k = 0; k < Math.min(need, neighbors.length); k++) {
+            used[neighbors[k].idx] = true;
+            group.push(rawTips[neighbors[k].idx]);
+          }
+          clusters.push(group);
+        }
+
+        totalBulbs = clusters.reduce((sum, g) => sum + g.length, 0);
+        litBulbsCount = 0;
+
+        const bulb = fibSphere(14);
+        clusters.forEach((clusterTips, clusterIdx) => {
+          const owner = clusterIdx < lightDonors.length ? lightDonors[clusterIdx] : null;
+          const isLit = Boolean(owner);
+          if (!isLit && !CAMPAIGN.showUnlitBulbs) return;
+
+          const t0 = T_ORNAMENTS[0] + 0.15 + (clusterIdx / clusters.length) * 2.1;
+          const col = isLit
+            ? resolveColor(owner.color, PALETTE_MAP.warm)
+            : UNLIT_COL;
+
+          let sumX = 0, sumY = 0, sumZ = 0;
+          for (const [cx, cy, cz] of clusterTips) {
+            sumX += cx;
+            sumY += cy;
+            sumZ += cz;
+            if (isLit) {
+              litBulbsCount++;
+              bulbTargets.push({ donor: owner, x: cx, y: cy, z: cz, radius: 13 });
+            }
+
+            const phase = rand() * TAU;
+            for (const [bx, by, bz] of bulb) {
+              addPoint(
+                cx + bx * 0.029, cy + by * 0.029, cz + bz * 0.029,
+                bx, by, bz, col, "LIGHT", t0,
+                isLit ? 1.0 : 0.28, phase,
+                cx, cy, cz, isLit,
+                owner ? owner.id : null,
+                isLit
+              );
+            }
+          }
+
+          // Tâm chùm 4 bóng để camera xoay chính diện & gắn nhãn tên chủ nhân
+          if (owner && clusterTips.length > 0) {
+            donorAnchors.push({
+              donor: owner,
+              x: sumX / clusterTips.length,
+              y: sumY / clusterTips.length,
+              z: sumZ / clusterTips.length,
+              radius: 16
+            });
+          }
+        });
+      }
+
+      buildScene();
+
+      // =====================================================================
+      // 5. PHÉP CHIẾU 3D -> 2D & VẼ NGÔI SAO ĐỈNH CÂY (MỐC 100%)
+      // =====================================================================
+      const camZ = 3.25;
+      const sinP = Math.sin(0.15);
+      const cosP = Math.cos(0.15);
+      const fov = 1.92;
+      const aspect = CH / CW;
+
+      function project(x, y, z, cosA, sinA) {
+        const rx = x * cosA - z * sinA;
+        const rz = x * sinA + z * cosA;
+        const cy = y + 0.34;
+        const cz = rz + camZ;
+
+        const py = cy * cosP - cz * sinP;
+        const pz = cy * sinP + cz * cosP;
+        if (pz <= 0.25) return null;
+
+        const sx = COLS * 0.5 + (rx / pz) * fov * (ROWS * 0.5) * aspect;
+        const sy = ROWS * 0.5 - (py / pz) * fov * (ROWS * 0.5);
+        return { sx, sy, pz };
+      }
+
+      function pointInPoly(px, py, poly) {
+        let inside = false;
+        for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+          const xi = poly[i][0], yi = poly[i][1];
+          const xj = poly[j][0], yj = poly[j][1];
+          const intersect = ((yi > py) !== (yj > py)) &&
+            (px < ((xj - xi) * (py - yi)) / ((yj - yi) || 1e-6) + xi);
+          if (intersect) inside = !inside;
+        }
+        return inside;
+      }
+
+      function drawStar(charGrid, colorGrid, zBuf, cx, cy, size, t, flash = 0) {
+        const stretchX = 1.92;
+        const tintR = 1.0;
+        const tintG = 0.84 + (1.0 - 0.84) * flash;
+        const tintB = 0.25 + (1.0 - 0.25) * flash;
+        const boost = 1 + 1.5 * flash;
+
+        const rayLen = Math.round(size * (0.95 + 2.8 * flash));
+        for (let k = 0; k < 8; k++) {
+          const ang = (k * TAU) / 8 + 0.15 * Math.sin(t * 0.7);
+          const dx = Math.cos(ang) * stretchX;
+          const dy = Math.sin(ang);
+          for (let r = 1; r <= rayLen; r++) {
+            const fade = 1 - r / (rayLen + 1);
+            if (fade < 0.15 && flash < 0.1) continue;
+            const col = Math.round(cx + dx * r);
+            const row = Math.round(cy + dy * r);
+            if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
+              const idx = row * COLS + col;
+              if (zBuf[idx] > 0.12) {
+                zBuf[idx] = 0.12;
+                charGrid[idx] = fade > 0.55 ? "*" : "+";
+                const lum = clamp(fade * boost, 0.35, 1.35);
+                colorGrid[idx] = `rgb(${Math.min(255, Math.round(tintR * 255 * lum))},${Math.min(255, Math.round(tintG * 255 * lum))},${Math.min(255, Math.round(tintB * 255 * lum))})`;
+              }
+            }
+          }
+        }
+
+        const R = size * 0.95;
+        const rIn = R * 0.43;
+        const poly = [];
+        for (let i = 0; i < 10; i++) {
+          const a = -Math.PI / 2 + (i * Math.PI) / 5;
+          const rad = i % 2 === 0 ? R : rIn;
+          poly.push([cx + Math.cos(a) * rad * stretchX, cy + Math.sin(a) * rad]);
+        }
+
+        const maxDy = Math.ceil(R + 1);
+        const maxDx = Math.ceil(R * stretchX + 1);
+        for (let dy = -maxDy; dy <= maxDy; dy++) {
+          for (let dx = -maxDx; dx <= maxDx; dx++) {
+            const px = cx + dx;
+            const py = cy + dy;
+            if (!pointInPoly(px, py, poly)) continue;
+
+            const col = Math.round(px);
+            const row = Math.round(py);
+            if (col < 0 || col >= COLS || row < 0 || row >= ROWS) continue;
+
+            const idx = row * COLS + col;
+            zBuf[idx] = 0.08;
+
+            const distNorm = Math.hypot(dx / stretchX, dy) / Math.max(R, 0.01);
+            const ch = distNorm < 0.34 ? "@" : distNorm < 0.68 ? "#" : "*";
+            charGrid[idx] = ch;
+            if (ch === "@") {
+              colorGrid[idx] = "rgb(255, 253, 220)";
+            } else {
+              const lum = clamp((1.12 - 0.25 * distNorm) * (1 + 0.45 * flash), 0.7, 1.35);
+              colorGrid[idx] = `rgb(${Math.min(255, Math.round(tintR * 255 * lum))},${Math.min(255, Math.round(tintG * 255 * lum))},${Math.min(255, Math.round(tintB * 255 * lum))})`;
+            }
+          }
+        }
+      }
+
+      // =====================================================================
+      // 6. QUẢN LÝ TƯƠNG TÁC GÂY QUỸ, TÌM VỊ TRÍ & BÙA MAY MẮN
+      // =====================================================================
+      let elapsed = 0;
+      let angle = 0;
+      let targetAngle = null;
+      let selectedDonorId = null;
+      let hoveredDonor = null;
+      let screenHitList = [];
+
+      const fundraiserBox = document.getElementById("fundraiserBox");
+      const btnTogglePanel = document.getElementById("btnTogglePanel");
+      const searchInput = document.getElementById("searchInput");
+      const donorListEl = document.getElementById("donorList");
+      const btnClearFocus = document.getElementById("btnClearFocus");
+      const hoverTip = document.getElementById("hoverTip");
+      const wishModal = document.getElementById("wishModal");
+
+      // Cập nhật thanh tiến độ % hoàn thành cây & trạng thái 2 mốc mở khóa
+      document.getElementById("campaignTitle").textContent = CAMPAIGN.title;
+      document.getElementById("progressBar").style.width = `${treeStats.percent}%`;
+      document.getElementById("progressText").textContent = `Hoàn thành cây: ${treeStats.percent}% (${DONORS.length}/${treeStats.totalSlots})`;
+      document.getElementById("lightStatText").textContent = `💡 ${litBulbsCount}/${totalBulbs} đèn`;
+
+      const pill50 = document.getElementById("pill50");
+      const pill100 = document.getElementById("pill100");
+      if (HAS_TINSEL) {
+        pill50.classList.add("unlocked");
+        pill50.textContent = "✅ 50%: Kim tuyến vàng";
+      }
+      if (HAS_STAR) {
+        pill100.classList.add("unlocked");
+        pill100.textContent = "✅ 100%: Ngôi sao đỉnh";
+      }
+
+      // Hiển thị số suất còn trống của từng loại vật phẩm
+      const quotaGrid = document.getElementById("quotaGrid");
+      Object.entries(CAMPAIGN.quotas).forEach(([key, q]) => {
+        const usedCount = DONORS.filter(d => d.type === key).length;
+        const left = Math.max(0, q.max - usedCount);
+        const chip = document.createElement("div");
+        chip.className = "quota-chip";
+        chip.textContent = `${q.icon} ${q.short}: còn ${left}/${q.max}`;
+        quotaGrid.appendChild(chip);
+      });
+
+      document.getElementById("fundraiserHeader").addEventListener("click", () => {
+        const isOpen = fundraiserBox.classList.toggle("open");
+        btnTogglePanel.textContent = isOpen ? "Thu gọn ▲" : "Tìm của bạn ▼";
+      });
+
+      let activeFilter = "all";
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeFilter = btn.dataset.filter;
+          renderDonorList();
+        });
+      });
+
+      searchInput.addEventListener("input", renderDonorList);
+
+      function renderDonorList() {
+        const q = searchInput.value.trim().toLowerCase();
+        donorListEl.innerHTML = "";
+
+        const filtered = DONORS.filter(d => {
+          const matchText = d.name.toLowerCase().includes(q) || d.id.toLowerCase().includes(q);
+          if (!matchText) return false;
+          if (activeFilter === "all") return true;
+          if (activeFilter === "ornament") return ["gift", "bauble", "stocking"].includes(d.type);
+          return d.type === activeFilter;
+        });
+
+        if (filtered.length === 0) {
+          donorListEl.innerHTML = `<div style="font-size:11px; color:#7a859e; padding:6px;">Không tìm thấy tên/mã phù hợp.</div>`;
+          return;
+        }
+
+        filtered.forEach(d => {
+          const meta = TYPE_META[d.type] || TYPE_META.light;
+          const row = document.createElement("div");
+          row.className = "donor-item" + (d.id === selectedDonorId ? " selected" : "");
+          row.innerHTML = `
+            <div><span class="donor-code">[${d.id}]</span>${d.name}</div>
+            <span class="donor-badge">${meta.icon} ${meta.label}</span>
+          `;
+          row.addEventListener("click", () => focusDonor(d.id, true));
+          donorListEl.appendChild(row);
+        });
+      }
+
+      function focusDonor(donorId, openWishCard = false) {
+        const anchor = donorAnchors.find(a => a.donor.id === donorId);
+        if (!anchor) return;
+
+        selectedDonorId = donorId;
+        btnClearFocus.style.display = "inline-block";
+
+        if (elapsed < T_MSG) {
+          elapsed = T_MSG + 0.5;
+        }
+
+        targetAngle = -Math.PI / 2 - Math.atan2(anchor.z, anchor.x);
+        renderDonorList();
+
+        if (openWishCard) {
+          openModalForDonor(anchor.donor);
+        }
+      }
+
+      function clearFocus() {
+        selectedDonorId = null;
+        targetAngle = null;
+        btnClearFocus.style.display = "none";
+        renderDonorList();
+      }
+      btnClearFocus.addEventListener("click", clearFocus);
+
+      function openModalForDonor(donor) {
+        const meta = TYPE_META[donor.type] || TYPE_META.light;
+        document.getElementById("modalBadge").textContent = `${meta.icon} ${meta.label} • Mã ${donor.id}`;
+        document.getElementById("modalOwner").textContent = donor.name;
+        document.getElementById("modalWish").textContent = donor.wish || "Chúc mùa Giáng Sinh an lành và ấm áp!";
+        wishModal.classList.add("visible");
+
+        const btnCopy = document.getElementById("btnCopyLink");
+        btnCopy.textContent = "🔗 Chép link của tôi";
+        btnCopy.onclick = () => {
+          const url = new URL(window.location.href);
+          url.searchParams.set("me", donor.id);
+          navigator.clipboard?.writeText(url.toString());
+          btnCopy.textContent = "✓ Đã sao chép link!";
+        };
+      }
+
+      document.getElementById("btnCloseModal").addEventListener("click", () => {
+        wishModal.classList.remove("visible");
+      });
+      wishModal.addEventListener("click", (e) => {
+        if (e.target === wishModal) wishModal.classList.remove("visible");
+      });
+
+      renderDonorList();
+
+      // Tự động mở đúng vị trí nếu truy cập qua link cá nhân hóa (?me=MS01)
+      const initParam = new URLSearchParams(window.location.search).get("me");
+      if (initParam) {
+        const matched = DONORS.find(d => d.id.toLowerCase() === initParam.trim().toLowerCase());
+        if (matched) {
+          setTimeout(() => focusDonor(matched.id, true), 150);
+        }
+      }
+
+      // =====================================================================
+      // 7. ĐIỀU KHIỂN NHẠC NỀN, KÉO XOAY & CLICK VẬT PHẨM TRÊN CÂY
+      // =====================================================================
+      const bgMusic = document.getElementById("bgMusic");
+      const btnMusic = document.getElementById("btnMusic");
+      let musicPlaying = false;
+      bgMusic.volume = 0.65;
+
+      function updateMusicUI() {
+        btnMusic.textContent = musicPlaying ? "M: Music On" : "M: Music Off";
+      }
+      function toggleMusic() {
+        if (musicPlaying) {
+          bgMusic.pause();
+          musicPlaying = false;
+          updateMusicUI();
+        } else {
+          bgMusic.play().then(() => {
+            musicPlaying = true;
+            updateMusicUI();
+          }).catch(() => {});
+        }
+      }
+      function autoStartMusic() {
+        if (!musicPlaying) {
+          bgMusic.play().then(() => {
+            musicPlaying = true;
+            updateMusicUI();
+          }).catch(() => {});
+        }
+        window.removeEventListener("pointerdown", autoStartMusic);
+        window.removeEventListener("keydown", autoStartMusic);
+      }
+      window.addEventListener("pointerdown", autoStartMusic);
+      window.addEventListener("keydown", autoStartMusic);
+      btnMusic.onclick = toggleMusic;
+
+      let paused = false;
+      let dragging = false;
+      let dragMoved = false;
+      let lastMouseX = 0;
+      let lastTime = performance.now();
+
+      function findHitDonor(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        const px = ((clientX - rect.left) / rect.width) * (COLS * CW);
+        const py = ((clientY - rect.top) / rect.height) * (ROWS * CH);
+
+        let best = null;
+        let bestDist = Infinity;
+        for (const item of screenHitList) {
+          const d = Math.hypot(px - item.x, py - item.y);
+          if (d <= item.r && d < bestDist) {
+            best = item.donor;
+            bestDist = d;
+          }
+        }
+        return best;
+      }
+
+      canvas.addEventListener("pointerdown", (e) => {
+        dragging = true;
+        dragMoved = false;
+        targetAngle = null;
+        lastMouseX = e.clientX;
+      });
+
+      window.addEventListener("pointermove", (e) => {
+        if (dragging) {
+          const dx = e.clientX - lastMouseX;
+          if (Math.abs(dx) > 2) dragMoved = true;
+          lastMouseX = e.clientX;
+          angle += dx * 0.01;
+          hoverTip.style.display = "none";
+          return;
+        }
+
+        const hit = findHitDonor(e.clientX, e.clientY);
+        hoveredDonor = hit;
+        if (hit) {
+          const meta = TYPE_META[hit.type] || TYPE_META.light;
+          canvas.style.cursor = "pointer";
+          hoverTip.style.display = "block";
+          hoverTip.style.left = `${e.clientX}px`;
+          hoverTip.style.top = `${e.clientY}px`;
+          hoverTip.innerHTML = `${meta.icon} <b>[${hit.id}] ${hit.name}</b><br><span style="color:#ffc45a;font-size:10.5px;">Bấm để mở điều ước</span>`;
+        } else {
+          canvas.style.cursor = "grab";
+          hoverTip.style.display = "none";
+        }
+      });
+
+      window.addEventListener("pointerup", (e) => {
+        if (dragging && !dragMoved) {
+          const hit = findHitDonor(e.clientX, e.clientY);
+          if (hit) {
+            focusDonor(hit.id, true);
+          }
+        }
+        dragging = false;
+      });
+
+      function togglePause() {
+        paused = !paused;
+        document.getElementById("btnPause").textContent = paused ? "Space: Play" : "Space: Pause";
+      }
+      function restartScene() {
+        elapsed = 0;
+        angle = 0;
+        clearFocus();
+        paused = false;
+        document.getElementById("btnPause").textContent = "Space: Pause";
+      }
+      function saveScreenshot() {
+        const link = document.createElement("a");
+        link.download = "ascii-christmas-tree.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      }
+
+      document.getElementById("btnPause").onclick = togglePause;
+      document.getElementById("btnRestart").onclick = restartScene;
+      document.getElementById("btnSave").onclick = saveScreenshot;
+
+      window.addEventListener("keydown", (e) => {
+        if (document.activeElement === searchInput) return;
+        if (e.code === "Space") {
+          e.preventDefault();
+          togglePause();
+        } else if (e.key === "r" || e.key === "R") {
+          restartScene();
+        } else if (e.key === "s" || e.key === "S") {
+          saveScreenshot();
+        } else if (e.key === "m" || e.key === "M") {
+          toggleMusic();
+        } else if (e.key === "Escape") {
+          wishModal.classList.remove("visible");
+        }
+      });
+
+      // =====================================================================
+      // 8. VÒNG LẶP RENDER CHÍNH
+      // =====================================================================
+      const zBuf = new Float32Array(COLS * ROWS);
+      const charGrid = new Array(COLS * ROWS);
+      const colorGrid = new Array(COLS * ROWS);
+      const [LX, LY, LZ] = normalize(0.55, 0.72, -0.45);
+
+      function render(now) {
+        const dt = Math.min((now - lastTime) / 1000, 0.05);
+        lastTime = now;
+
+        if (!paused) {
+          elapsed += dt;
+          if (!dragging) {
+            if (targetAngle !== null) {
+              let diff = (targetAngle - angle) % TAU;
+              if (diff > Math.PI) diff -= TAU;
+              if (diff < -Math.PI) diff += TAU;
+              angle += diff * Math.min(1, dt * 5.5);
+            } else if (!selectedDonorId) {
+              angle = (angle + dt * 0.36) % TAU;
+            }
+          }
+        }
+
+        zBuf.fill(999);
+        charGrid.fill("");
+        colorGrid.fill("");
+
+        const cosA = Math.cos(angle);
+        const sinA = Math.sin(angle);
+
+        // 1. Bầu trời sao nhấp nháy
+        for (const st of stars) {
+          const twinkle = 0.5 + 0.5 * Math.sin(elapsed * st.speed + st.phase);
+          if (twinkle > 0.25) {
+            const idx = st.row * COLS + st.col;
+            charGrid[idx] = twinkle > 0.82 ? st.ch : ".";
+            const b = Math.round(95 + 135 * twinkle);
+            colorGrid[idx] = `rgb(${b},${b + 10},${Math.min(255, b + 35)})`;
+          }
+        }
+
+        // 2. Mặt sàn chấm tròn
+        for (const gp of groundPts) {
+          const p = project(gp.x, gp.y, gp.z, cosA, sinA);
+          if (!p) continue;
+          const col = Math.round(p.sx);
+          const row = Math.round(p.sy);
+          if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
+            const idx = row * COLS + col;
+            if (p.pz < zBuf[idx]) {
+              zBuf[idx] = p.pz;
+              charGrid[idx] = ".";
+              const radialFade = clamp(1.15 - gp.dist / 2.5, 0.25, 1.0);
+              const shade = Math.round(clamp((145 - p.pz * 20) * radialFade, 38, 115));
+              colorGrid[idx] = `rgb(${shade},${shade + 8},${shade + 22})`;
+            }
+          }
+        }
+
+        // 3. Chiếu toàn bộ điểm 3D lên lưới ASCII
+        for (let i = 0; i < points.length; i++) {
+          const pt = points[i];
+          const age = elapsed - pt.t0;
+          if (age < 0) continue;
+
+          let px = pt.x, py = pt.y, pz = pt.z;
+          if (pt.pop && age < 0.35) {
+            const s = smoothstep(age / 0.35);
+            px = pt.cx + (pt.x - pt.cx) * s;
+            py = pt.cy + (pt.y - pt.cy) * s;
+            pz = pt.cz + (pt.z - pt.cz) * s;
+          }
+
+          if (pt.kind === "CHARM") {
+            px += Math.sin(elapsed * 2.4 + pt.phase) * 0.011;
+          }
+
+          const proj = project(px, py, pz, cosA, sinA);
+          if (!proj) continue;
+
+          const col = Math.round(proj.sx);
+          const row = Math.round(proj.sy);
+          if (col < 0 || col >= COLS || row < 0 || row >= ROWS) continue;
+
+          const idx = row * COLS + col;
+          if (proj.pz >= zBuf[idx]) continue;
+
+          zBuf[idx] = proj.pz;
+
+          const rnx = pt.nx * cosA - pt.nz * sinA;
+          const rnz = pt.nx * sinA + pt.nz * cosA;
+          const diff = Math.max(0, rnx * LX + pt.ny * LY + rnz * LZ);
+
+          let lum = pt.base * (0.28 + 0.82 * diff);
+          let ch = RAMP[Math.min(RAMP.length - 1, Math.floor(clamp(lum, 0, 0.999) * RAMP.length))];
+
+          let spawnFlash = 0;
+          if (pt.lit && age < 0.32) {
+            spawnFlash = 1 - age / 0.32;
+          }
+
+          if (pt.kind === "LIGHT") {
+            if (!pt.lit) {
+              ch = "·";
+              lum = 0.16;
+            } else {
+              const pulse = 0.65 + 0.35 * Math.sin(elapsed * 5.0 + pt.phase);
+              lum = 0.84 + 0.35 * pulse;
+              ch = pulse > 0.72 ? "@" : "o";
+            }
+          } else if (pt.kind === "CHARM") {
+            const shimmer = 0.78 + 0.32 * Math.sin(elapsed * 4.5 + pt.phase);
+            lum = clamp(lum * shimmer + 0.3, 0.4, 1.2);
+            ch = shimmer > 0.95 ? "@" : "#";
+          } else if (pt.kind === "CHARM_THREAD") {
+            ch = "|";
+          } else if (pt.kind === "TINSEL") {
+            // Dây kim tuyến vàng rực khi đạt mốc >= 50%
+            const shimmer = 0.88 + 0.32 * Math.sin(elapsed * 4.5 + pt.phase);
+            lum = clamp(lum * shimmer + 0.35, 0.3, 1.25);
+            ch = shimmer > 1.02 ? "@" : lum > 0.65 ? "#" : "*";
+          } else if (pt.kind === "CORE") {
+            ch = spawnFlash > 0.35 ? "=" : ".";
+          }
+
+          const isSelected = selectedDonorId && pt.donorId === selectedDonorId;
+          const isHovered = hoveredDonor && pt.donorId === hoveredDonor.id;
+          let focusBoost = 0;
+
+          if (isSelected || isHovered) {
+            focusBoost = 0.58 + 0.35 * Math.sin(elapsed * 7.5);
+            if (pt.kind === "LIGHT") ch = "@";
+          } else if (selectedDonorId && pt.donorId) {
+            lum *= 0.62;
+          }
+
+          const intensity = (pt.lit ? 0.35 : 0.22) + 0.78 * clamp(lum, 0, 1.15) + 0.6 * spawnFlash + focusBoost;
+          const whiteMix = clamp(spawnFlash + focusBoost * 0.45, 0, 1);
+          const baseR = pt.r + (1.0 - pt.r) * whiteMix;
+          const baseG = pt.g + (1.0 - pt.g) * whiteMix;
+          const baseB = pt.b + (1.0 - pt.b) * whiteMix;
+
+          const r = Math.min(255, Math.round(baseR * 255 * intensity));
+          const g = Math.min(255, Math.round(baseG * 255 * intensity));
+          const b = Math.min(255, Math.round(baseB * 255 * intensity));
+
+          charGrid[idx] = ch;
+          colorGrid[idx] = `rgb(${r},${g},${b})`;
+        }
+
+        // 4. Cập nhật vùng bấm (hit-box) & định vị vật phẩm đang được chọn
+        screenHitList = [];
+        let selectedScreenPos = null;
+
+        if (elapsed >= T_ORNAMENTS[0]) {
+          // Vùng bấm cho từng bóng đèn sáng trong chùm 4 bóng
+          for (const bt of bulbTargets) {
+            const p = project(bt.x, bt.y, bt.z, cosA, sinA);
+            if (p && p.pz < 3.48) {
+              screenHitList.push({ donor: bt.donor, x: p.sx * CW, y: p.sy * CH, r: bt.radius });
+            }
+          }
+          // Vùng bấm & tâm định vị cho toàn bộ vật phẩm
+          for (const anc of donorAnchors) {
+            const p = project(anc.x, anc.y, anc.z, cosA, sinA);
+            if (!p) continue;
+            if (p.pz < 3.48) {
+              screenHitList.push({ donor: anc.donor, x: p.sx * CW, y: p.sy * CH, r: anc.radius });
+            }
+            if (anc.donor.id === selectedDonorId) {
+              selectedScreenPos = { sx: p.sx, sy: p.sy, donor: anc.donor };
+            }
+          }
+        }
+
+        if (selectedScreenPos) {
+          const sc = Math.round(selectedScreenPos.sx);
+          const sr = Math.round(selectedScreenPos.sy);
+          const blink = Math.sin(elapsed * 8) > -0.3;
+          if (blink) {
+            const offsets = [[0, -2], [0, 2], [-3, 0], [3, 0]];
+            for (const [dc, dr] of offsets) {
+              const cc = sc + dc, rr = sr + dr;
+              if (cc >= 0 && cc < COLS && rr >= 0 && rr < ROWS) {
+                charGrid[rr * COLS + cc] = "+";
+                colorGrid[rr * COLS + cc] = "rgb(255, 240, 130)";
+              }
+            }
+          }
+        }
+
+        // 5. MỐC 100%: Thắp sáng Ngôi Sao 5 cánh trên đỉnh cây khi đạt 100%
+        if (elapsed >= T_STAR) {
+          const starProj = project(0, Y1 + 0.14, 0, cosA, sinA);
+          if (starProj) {
+            if (HAS_STAR) {
+              const on = smoothstep((elapsed - T_STAR) / 0.35);
+              const flash = Math.pow(clamp(1 - (elapsed - T_STAR) / 1.0, 0, 1), 2);
+              const starSize = (2.1 + 1.6 * on) * (1 + 0.05 * Math.sin(elapsed * 5));
+              drawStar(charGrid, colorGrid, zBuf, starProj.sx, starProj.sy, starSize, elapsed, flash);
+            } else {
+              // Điểm neo mờ trên đỉnh báo hiệu vị trí ngôi sao đang chờ mốc 100%
+              const sc = Math.round(starProj.sx);
+              const sr = Math.round(starProj.sy);
+              if (sc >= 0 && sc < COLS && sr >= 0 && sr < ROWS) {
+                charGrid[sr * COLS + sc] = "+";
+                colorGrid[sr * COLS + sc] = "rgb(95, 108, 135)";
+              }
+            }
+          }
+        }
+
+        // 6. Dòng chữ MERRY CHRISTMAS 2026
+        if (elapsed > T_MSG) {
+          const msgRow = ROWS - 6;
+          const x0 = Math.floor((COLS - CAMPAIGN.message.length) / 2);
+          const shown = Math.min(CAMPAIGN.message.length, Math.floor((elapsed - T_MSG) * 10));
+
+          for (let r = msgRow - 1; r <= msgRow + 1; r++) {
+            for (let c = Math.max(0, x0 - 2); c < Math.min(COLS, x0 + shown + 2); c++) {
+              charGrid[r * COLS + c] = "";
+            }
+          }
+
+          const palette = [[255, 75, 85], [255, 210, 75], [75, 220, 115]];
+          for (let i = 0; i < shown; i++) {
+            const ch = CAMPAIGN.message[i];
+            if (ch !== " ") {
+              const tint = palette[(Math.floor(i / 2) + Math.floor(elapsed * 1.5)) % 3];
+              const glow = 0.85 + 0.25 * Math.sin(elapsed * 5 + i * 0.4);
+              const idx = msgRow * COLS + (x0 + i);
+              charGrid[idx] = ch;
+              colorGrid[idx] = `rgb(${Math.min(255, Math.round(tint[0] * glow))},${Math.min(255, Math.round(tint[1] * glow))},${Math.min(255, Math.round(tint[2] * glow))})`;
+            }
+          }
+        }
+
+        // 7. Vẽ lưới ký tự lên Canvas
+        ctx.fillStyle = "#080a10";
+        ctx.fillRect(0, 0, COLS * CW, ROWS * CH);
+
+        ctx.font = `bold ${FONT_PX}px Consolas, Menlo, "Courier New", monospace`;
+        ctx.textBaseline = "top";
+
+        let letterCount = 0;
+        let lastColor = "";
+
+        for (let r = 0; r < ROWS; r++) {
+          const py = r * CH;
+          for (let c = 0; c < COLS; c++) {
+            const idx = r * COLS + c;
+            const ch = charGrid[idx];
+            if (!ch) continue;
+            letterCount++;
+            const colStr = colorGrid[idx];
+            if (colStr !== lastColor) {
+              ctx.fillStyle = colStr;
+              lastColor = colStr;
+            }
+            ctx.fillText(ch, c * CW, py);
+          }
+        }
+
+        // Nhãn chỉ điểm gọn nhẹ cạnh đúng món đồ của người đang tìm kiếm
+        if (selectedScreenPos) {
+          const tag = `◄ [${selectedScreenPos.donor.id}] ${selectedScreenPos.donor.name}`;
+          const tx = Math.min(COLS * CW - tag.length * 7.5 - 10, (selectedScreenPos.sx + 4) * CW);
+          const ty = clamp((selectedScreenPos.sy - 0.5) * CH, 18, (ROWS - 8) * CH);
+          ctx.fillStyle = "rgba(10, 14, 24, 0.88)";
+          ctx.fillRect(tx - 4, ty - 2, tag.length * 7.4 + 8, 17);
+          ctx.strokeStyle = "#ffc45a";
+          ctx.strokeRect(tx - 4, ty - 2, tag.length * 7.4 + 8, 17);
+          ctx.fillStyle = "#ffe28a";
+          ctx.font = `bold 12px Consolas, Menlo, "Courier New", monospace`;
+          ctx.fillText(tag, tx, ty);
+        }
+
+        // 8. Thông số HUD
+        ctx.font = `12px Consolas, Menlo, "Courier New", monospace`;
+        ctx.fillStyle = "#ffc45a";
+        const timeText = `• tree ${treeStats.percent}%  t ${elapsed.toFixed(1).padStart(4, "0")}s`;
+        ctx.fillText(timeText, (COLS - timeText.length - 2) * CW, 10);
+
+        const deg = (((angle * 180) / Math.PI) % 360 + 360) % 360;
+        ctx.fillStyle = "#b0a8c4";
+        ctx.fillText(CAMPAIGN.watermark, 2 * CW, (ROWS - 4.2) * CH);
+        ctx.fillStyle = "#7a859e";
+        ctx.fillText(
+          `rotation ${deg.toFixed(2).padStart(6, "0")}°    lit ${litBulbsCount}/${totalBulbs}`,
+          2 * CW,
+          (ROWS - 2.9) * CH
+        );
+        ctx.fillText(
+          `donors ${DONORS.length}/${treeStats.totalSlots}    letters ${letterCount.toLocaleString("en-US")}`,
+          2 * CW,
+          (ROWS - 1.6) * CH
+        );
+
+        requestAnimationFrame(render);
+      }
+
+      requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>

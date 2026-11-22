@@ -2,13 +2,14 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>ASCII Christmas Tree 3D - Thắp Sáng Cây Thông Gây Quỹ</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
       background-color: #080a10;
@@ -19,6 +20,7 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      min-height: 100dvh;
       overflow: hidden;
       user-select: none;
     }
@@ -30,6 +32,7 @@
       justify-content: center;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
     }
     canvas {
       display: block;
@@ -37,9 +40,15 @@
       cursor: grab;
       max-width: 100%;
       max-height: 100%;
+      touch-action: none;
     }
     canvas:active {
       cursor: grabbing;
+    }
+
+    /* Wrapper trên desktop giữ nguyên vị trí độc lập 2 góc */
+    #topHud {
+      display: contents;
     }
 
     /* LOGO CLB GÓC TRÊN BÊN PHẢI */
@@ -47,7 +56,7 @@
       position: fixed;
       top: 12px;
       right: 16px;
-      z-index: 20;
+      z-index: 19;
       display: flex;
       align-items: center;
       gap: 9px;
@@ -82,8 +91,8 @@
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 8px;
-      z-index: 15;
-      opacity: 0.9;
+      z-index: 18;
+      opacity: 0.92;
       transition: opacity 0.2s;
     }
     #controls:hover {
@@ -117,10 +126,10 @@
       position: fixed;
       top: 12px;
       left: 14px;
-      z-index: 20;
+      z-index: 22;
       width: 322px;
       max-width: calc(100vw - 28px);
-      background: rgba(12, 16, 26, 0.86);
+      background: rgba(12, 16, 26, 0.88);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 196, 90, 0.3);
       border-radius: 10px;
@@ -338,6 +347,7 @@
       width: 100%;
       max-width: 400px;
       max-height: 90vh;
+      max-height: 90dvh;
       overflow-y: auto;
       background: linear-gradient(160deg, #151c30 0%, #0c101b 100%);
       border: 1px solid rgba(255, 196, 90, 0.58);
@@ -355,7 +365,7 @@
       position: absolute;
       top: 12px;
       right: 12px;
-      padding: 3px 8px;
+      padding: 4px 9px;
       font-size: 13px;
       z-index: 2;
     }
@@ -428,7 +438,7 @@
       justify-content: center;
       background: rgba(4, 6, 12, 0.74);
       backdrop-filter: blur(5px);
-      padding: 16px;
+      padding: 14px;
     }
     #charmVaultModal.visible {
       display: flex;
@@ -437,6 +447,7 @@
       width: 100%;
       max-width: 780px;
       max-height: 86vh;
+      max-height: 86dvh;
       display: flex;
       flex-direction: column;
       background: linear-gradient(165deg, #131a2d 0%, #0a0e18 100%);
@@ -548,18 +559,135 @@
       max-width: 92vw;
     }
 
+    /* =====================================================================
+       TỐI ƯU GIAO DIỆN ĐIỆN THOẠI (<= 680px)
+       ===================================================================== */
     @media (max-width: 680px) {
+      #topHud {
+        position: fixed;
+        top: calc(8px + env(safe-area-inset-top));
+        left: 10px;
+        right: 10px;
+        z-index: 22;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+        pointer-events: none;
+      }
+      #fundraiserBox {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        padding: 8px 10px;
+        pointer-events: auto;
+      }
+      .campaign-title {
+        font-size: 11.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      #btnTogglePanel {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 3px 8px;
+      }
+      .progress-wrap {
+        margin-top: 6px;
+        height: 6px;
+      }
+      .progress-meta {
+        margin-top: 4px;
+        font-size: 10.5px;
+      }
+      .milestone-row {
+        margin-top: 5px;
+        gap: 5px;
+        font-size: 10px;
+      }
+      .ms-pill {
+        padding: 3px 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      #searchInput,
+      #vaultSearch {
+        font-size: 16px; /* Ngăn trình duyệt điện thoại tự zoom khi chạm vào ô gõ chữ */
+        padding: 7px 10px;
+      }
+      .tab-btn {
+        padding: 5px 7px;
+        font-size: 11px;
+      }
+      #donorList {
+        max-height: 32vh;
+        max-height: 32dvh;
+      }
+      .donor-item {
+        padding: 8px 9px;
+        font-size: 12px;
+      }
+
+      /* Logo CLB nằm gọn ngay dưới bảng tiến độ bên góc phải, không đè nút dưới đáy */
       #clubLogoBox {
-        top: auto;
-        bottom: 54px;
-        right: 14px;
-        padding: 4px 8px;
+        position: static;
+        padding: 4px 9px;
+        gap: 7px;
+        border-radius: 8px;
+        pointer-events: auto;
       }
       #clubLogoImg {
-        height: 26px;
+        height: 23px;
       }
       #clubLogoBox span.club-name {
         font-size: 10.5px;
+      }
+
+      /* Hàng nút dưới đáy gọn đúng 1 dòng duy nhất */
+      #controls {
+        left: 8px;
+        right: 8px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: 5px;
+      }
+      #controls button {
+        flex: 1 1 auto;
+        padding: 8px 4px;
+        font-size: 11px;
+        text-align: center;
+        white-space: nowrap;
+        border-radius: 7px;
+      }
+
+      /* Thiệp điều ước & Kho Bùa Qua Môn trên điện thoại */
+      .wish-card {
+        padding: 16px;
+        max-width: 100%;
+      }
+      .wish-art-frame img {
+        max-height: 210px;
+      }
+      .vault-panel {
+        padding: 14px;
+        max-height: 88vh;
+        max-height: 88dvh;
+      }
+      .vault-title {
+        font-size: 13.5px;
+      }
+      .vault-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .vault-card {
+        padding: 8px;
+      }
+      .vault-card-thumb {
+        height: 92px;
       }
     }
   </style>
@@ -569,46 +697,48 @@
     <canvas id="screen"></canvas>
     <div id="errorBanner"></div>
 
-    <!-- LOGO CLB GÓC TRÊN BÊN PHẢI -->
-    <div id="clubLogoBox">
-      <img id="clubLogoImg" src="logo-clb.png" alt="Logo CLB"/>
-      <span class="club-name">CLB HIẾN MÁU ĐHTN</span>
-    </div>
-
-    <!-- Bảng tiến độ gây quỹ & tìm vị trí người mua -->
-    <div id="fundraiserBox">
-      <div id="fundraiserHeader" title="Bấm để mở danh sách & tìm vị trí của bạn">
-        <span class="campaign-title" id="campaignTitle">🎄 THẮP SÁNG CÂY THÔNG 2026</span>
-        <button type="button" id="btnTogglePanel" style="padding: 2px 7px; font-size: 11px;">Tìm của bạn ▼</button>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-bar" id="progressBar"></div>
-        <div class="milestone-tick" title="Mốc 50%: Bật dây kim tuyến vàng"></div>
-      </div>
-      <div class="progress-meta">
-        <span id="progressText">Hoàn thành cây: 0%</span>
-        <span id="lightStatText">💡 0/168 đèn</span>
-      </div>
-      <div class="milestone-row">
-        <div class="ms-pill" id="pill50">🔒 50%: Kim tuyến vàng</div>
-        <div class="ms-pill" id="pill100">🔒 100%: Ngôi sao đỉnh</div>
-      </div>
-
-      <div id="fundraiserBody">
-        <div class="quota-grid" id="quotaGrid"></div>
-        <input type="text" id="searchInput" placeholder="Nhập tên hoặc mã (VD: MS01, QM01)..." />
-        <div class="filter-tabs">
-          <button type="button" class="tab-btn active" data-filter="all">Tất cả</button>
-          <button type="button" class="tab-btn" data-filter="qua_mon">🎓 Bùa qua môn</button>
-          <button type="button" class="tab-btn" data-filter="charm">🧧 Thẻ ước</button>
-          <button type="button" class="tab-btn" data-filter="light">💡 Cụm đèn</button>
-          <button type="button" class="tab-btn" data-filter="ornament">🎁 Quà/Châu/Tất</button>
+    <div id="topHud">
+      <!-- Bảng tiến độ gây quỹ & tìm vị trí người mua -->
+      <div id="fundraiserBox">
+        <div id="fundraiserHeader" title="Bấm để mở danh sách & tìm vị trí của bạn">
+          <span class="campaign-title" id="campaignTitle">🎄 THẮP SÁNG CÂY THÔNG 2026</span>
+          <button type="button" id="btnTogglePanel" style="font-size: 11px;">Tìm của bạn ▼</button>
         </div>
-        <div id="donorList"></div>
-        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 6px;">
-          <button type="button" id="btnOpenVaultSmall" class="btn-charm" style="padding: 3px 8px; font-size: 11px;">🎓 Xem kho bùa qua môn</button>
-          <button type="button" id="btnClearFocus" style="padding: 3px 7px; font-size: 11px; display: none;">Bỏ chọn</button>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+          <div class="milestone-tick" title="Mốc 50%: Bật dây kim tuyến vàng"></div>
         </div>
+        <div class="progress-meta">
+          <span id="progressText">Hoàn thành cây: 0%</span>
+          <span id="lightStatText">💡 0/168 đèn</span>
+        </div>
+        <div class="milestone-row">
+          <div class="ms-pill" id="pill50">🔒 50%: Kim tuyến vàng</div>
+          <div class="ms-pill" id="pill100">🔒 100%: Ngôi sao đỉnh</div>
+        </div>
+
+        <div id="fundraiserBody">
+          <div class="quota-grid" id="quotaGrid"></div>
+          <input type="text" id="searchInput" placeholder="Nhập tên hoặc mã (VD: MS01, QM01)..." />
+          <div class="filter-tabs">
+            <button type="button" class="tab-btn active" data-filter="all">Tất cả</button>
+            <button type="button" class="tab-btn" data-filter="qua_mon">🎓 Bùa qua môn</button>
+            <button type="button" class="tab-btn" data-filter="charm">🧧 Thẻ ước</button>
+            <button type="button" class="tab-btn" data-filter="light">💡 Cụm đèn</button>
+            <button type="button" class="tab-btn" data-filter="ornament">🎁 Quà/Châu/Tất</button>
+          </div>
+          <div id="donorList"></div>
+          <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+            <button type="button" id="btnOpenVaultSmall" class="btn-charm" style="padding: 4px 8px; font-size: 11px;">🎓 Xem kho bùa qua môn</button>
+            <button type="button" id="btnClearFocus" style="padding: 4px 8px; font-size: 11px; display: none;">Bỏ chọn</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGO CLB GÓC TRÊN BÊN PHẢI -->
+      <div id="clubLogoBox">
+        <img id="clubLogoImg" src="logo-clb.png" alt="Logo CLB" />
+        <span class="club-name">CLB HIẾN MÁU ĐHTN</span>
       </div>
     </div>
 
@@ -738,7 +868,7 @@
       ];
 
       // =====================================================================
-     // XỬ LÝ LOGO CLB (CHỈ HIỂN THỊ ẢNH TỪ THƯ MỤC CODE CỦA CHỦ SỞ HỮU)
+      // XỬ LÝ LOGO CLB (CHỈ HIỂN THỊ ẢNH TỪ THƯ MỤC CODE CỦA CHỦ SỞ HỮU)
       // =====================================================================
       const clubLogoImg = document.getElementById("clubLogoImg");
       const logoCandidates = ["logo-clb.png", "logo-clb.jpg", "logo-clb.jpeg", "logo-clb.webp"];
@@ -773,6 +903,10 @@
       const HAS_TINSEL = treeStats.percent >= 50;
       const HAS_STAR = treeStats.percent >= 100;
 
+      function isMobileView() {
+        return window.innerWidth <= 680;
+      }
+
       // =====================================================================
       // 2. CẤU HÌNH LƯỚI ASCII & KHUNG VẼ AN TOÀN
       // =====================================================================
@@ -801,9 +935,6 @@
           canvas.style.height = `${Math.floor(ROWS * CH * scale)}px`;
         }
       }
-      window.addEventListener("resize", fitCanvas);
-      window.addEventListener("load", fitCanvas);
-      fitCanvas();
 
       // =====================================================================
       // 3. HÀM TOÁN HỌC & BẢNG MÀU
@@ -1253,24 +1384,26 @@
       // =====================================================================
       // 5. PHÉP CHIẾU 3D -> 2D & VẼ NGÔI SAO ĐỈNH CÂY
       // =====================================================================
-      const camZ = 3.25;
       const sinP = Math.sin(0.15);
       const cosP = Math.cos(0.15);
-      const fov = 1.92;
       const aspect = CH / CW;
 
       function project(x, y, z, cosA, sinA) {
+        const isPortrait = window.innerHeight > window.innerWidth;
+        const activeCamZ = isPortrait ? 3.08 : 3.25;
+        const activeFov = isPortrait ? 2.12 : 1.92;
+
         const rx = x * cosA - z * sinA;
         const rz = x * sinA + z * cosA;
         const cy = y + 0.34;
-        const cz = rz + camZ;
+        const cz = rz + activeCamZ;
 
         const py = cy * cosP - cz * sinP;
         const pz = cy * sinP + cz * cosP;
         if (pz <= 0.25) return null;
 
-        const sx = COLS * 0.5 + (rx / pz) * fov * (ROWS * 0.5) * aspect;
-        const sy = ROWS * 0.5 - (py / pz) * fov * (ROWS * 0.5);
+        const sx = COLS * 0.5 + (rx / pz) * activeFov * (ROWS * 0.5) * aspect;
+        const sy = ROWS * 0.5 - (py / pz) * activeFov * (ROWS * 0.5);
         return { sx, sy, pz };
       }
 
@@ -1403,9 +1536,13 @@
       vaultChip.addEventListener("click", openVaultModal);
       quotaGrid.appendChild(vaultChip);
 
+      function setPanelOpen(openState) {
+        fundraiserBox.classList.toggle("open", openState);
+        btnTogglePanel.textContent = openState ? "Thu gọn ▲" : "Tìm của bạn ▼";
+      }
+
       document.getElementById("fundraiserHeader").addEventListener("click", () => {
-        const isOpen = fundraiserBox.classList.toggle("open");
-        btnTogglePanel.textContent = isOpen ? "Thu gọn ▲" : "Tìm của bạn ▼";
+        setPanelOpen(!fundraiserBox.classList.contains("open"));
       });
 
       let activeFilter = "all";
@@ -1445,7 +1582,10 @@
             <div><span class="donor-code">[${d.id}]</span>${d.name}</div>
             <span class="donor-badge">${meta.icon} ${meta.label}</span>
           `;
-          row.addEventListener("click", () => focusDonor(d.id, true));
+          row.addEventListener("click", () => {
+            if (isMobileView()) setPanelOpen(false);
+            focusDonor(d.id, true);
+          });
           donorListEl.appendChild(row);
         });
       }
@@ -1534,6 +1674,7 @@
       let vaultLimit = 36;
 
       function openVaultModal() {
+        if (isMobileView()) setPanelOpen(false);
         document.getElementById("vaultTitle").textContent = `🎓 KHO BÙA QUA MÔN (${examCharmItems.length} LÁ BÙA)`;
         vaultLimit = 36;
         renderVaultGrid();
@@ -1619,11 +1760,39 @@
       const bgMusic = document.getElementById("bgMusic");
       const btnMusic = document.getElementById("btnMusic");
       let musicPlaying = false;
+      let paused = false;
       bgMusic.volume = 0.65;
 
       function updateMusicUI() {
-        btnMusic.textContent = musicPlaying ? "M: Music On" : "M: Music Off";
+        if (isMobileView()) {
+          btnMusic.textContent = musicPlaying ? "🔊 Nhạc" : "🔇 Nhạc";
+        } else {
+          btnMusic.textContent = musicPlaying ? "M: Music On" : "M: Music Off";
+        }
       }
+
+      function updateControlLabels() {
+        const mob = isMobileView();
+        document.getElementById("btnOpenVault").textContent = mob ? "🎓 Qua môn" : "🎓 Bùa Qua Môn";
+        document.getElementById("btnPause").textContent = paused
+          ? (mob ? "▶ Chạy" : "Space: Play")
+          : (mob ? "⏸ Dừng" : "Space: Pause");
+        document.getElementById("btnRestart").textContent = mob ? "🔄 Lại" : "R: Restart";
+        document.getElementById("btnSave").textContent = mob ? "📸 Lưu" : "S: Save PNG";
+        updateMusicUI();
+      }
+
+      window.addEventListener("resize", () => {
+        fitCanvas();
+        updateControlLabels();
+      });
+      window.addEventListener("load", () => {
+        fitCanvas();
+        updateControlLabels();
+      });
+      fitCanvas();
+      updateControlLabels();
+
       function toggleMusic() {
         if (musicPlaying) {
           bgMusic.pause();
@@ -1650,7 +1819,6 @@
       window.addEventListener("keydown", autoStartMusic);
       btnMusic.onclick = toggleMusic;
 
-      let paused = false;
       let dragging = false;
       let dragMoved = false;
       let lastMouseX = 0;
@@ -1661,12 +1829,13 @@
         if (!rect.width || !rect.height) return null;
         const px = ((clientX - rect.left) / rect.width) * (COLS * CW);
         const py = ((clientY - rect.top) / rect.height) * (ROWS * CH);
+        const tapScale = isMobileView() ? 1.85 : 1.0;
 
         let best = null;
         let bestDist = Infinity;
         for (const item of screenHitList) {
           const d = Math.hypot(px - item.x, py - item.y);
-          if (d <= item.r && d < bestDist) {
+          if (d <= item.r * tapScale && d < bestDist) {
             best = item.donor;
             bestDist = d;
           }
@@ -1684,12 +1853,14 @@
       window.addEventListener("pointermove", (e) => {
         if (dragging) {
           const dx = e.clientX - lastMouseX;
-          if (Math.abs(dx) > 2) dragMoved = true;
+          if (Math.abs(dx) > 3) dragMoved = true;
           lastMouseX = e.clientX;
-          angle += dx * 0.01;
+          angle += dx * 0.011;
           hoverTip.style.display = "none";
           return;
         }
+
+        if (e.pointerType === "touch") return;
 
         const hit = findHitDonor(e.clientX, e.clientY);
         hoveredDonor = hit;
@@ -1716,14 +1887,14 @@
 
       function togglePause() {
         paused = !paused;
-        document.getElementById("btnPause").textContent = paused ? "Space: Play" : "Space: Pause";
+        updateControlLabels();
       }
       function restartScene() {
         elapsed = 0;
         angle = 0;
         clearFocus();
         paused = false;
-        document.getElementById("btnPause").textContent = "Space: Pause";
+        updateControlLabels();
       }
       function saveScreenshot() {
         const link = document.createElement("a");
@@ -1960,7 +2131,7 @@
         }
 
         if (elapsed > T_MSG) {
-          const msgRow = ROWS - 6;
+          const msgRow = ROWS - 7;
           const x0 = Math.floor((COLS - CAMPAIGN.message.length) / 2);
           const shown = Math.min(CAMPAIGN.message.length, Math.floor((elapsed - T_MSG) * 10));
 
@@ -2010,34 +2181,39 @@
 
         if (selectedScreenPos) {
           const tag = `◄ [${selectedScreenPos.donor.id}] ${selectedScreenPos.donor.name}`;
-          const tx = Math.min(COLS * CW - tag.length * 7.5 - 10, (selectedScreenPos.sx + 4) * CW);
+          const tx = clamp((selectedScreenPos.sx + 3) * CW, 12, COLS * CW - tag.length * 7.6 - 12);
           const ty = clamp((selectedScreenPos.sy - 0.5) * CH, 18, (ROWS - 8) * CH);
-          ctx.fillStyle = "rgba(10, 14, 24, 0.88)";
-          ctx.fillRect(tx - 4, ty - 2, tag.length * 7.4 + 8, 17);
+          ctx.fillStyle = "rgba(10, 14, 24, 0.9)";
+          ctx.fillRect(tx - 4, ty - 2, tag.length * 7.5 + 8, 18);
           ctx.strokeStyle = "#ffc45a";
-          ctx.strokeRect(tx - 4, ty - 2, tag.length * 7.4 + 8, 17);
+          ctx.strokeRect(tx - 4, ty - 2, tag.length * 7.5 + 8, 18);
           ctx.fillStyle = "#ffe28a";
           ctx.font = `bold 12px Consolas, Menlo, "Courier New", monospace`;
           ctx.fillText(tag, tx, ty);
         }
 
-        ctx.font = `12px Consolas, Menlo, "Courier New", monospace`;
+        // Thông số HUD góc dưới trái (tăng cỡ chữ trên điện thoại để dễ đọc)
+        const mobHud = isMobileView();
+        const hudFontPx = mobHud ? 15 : 12;
+        const hudStep = mobHud ? 1.45 : 1.3;
+        ctx.font = `${hudFontPx}px Consolas, Menlo, "Courier New", monospace`;
+
         ctx.fillStyle = "#ffc45a";
-        ctx.fillText(`• tree ${treeStats.percent}%  t ${elapsed.toFixed(1).padStart(4, "0")}s`, 2 * CW, (ROWS - 5.5) * CH);
+        ctx.fillText(`• tree ${treeStats.percent}%  t ${elapsed.toFixed(1).padStart(4, "0")}s`, 2 * CW, (ROWS - 1.5 - hudStep * 3) * CH);
 
         const deg = (((angle * 180) / Math.PI) % 360 + 360) % 360;
         ctx.fillStyle = "#b0a8c4";
-        ctx.fillText(CAMPAIGN.watermark, 2 * CW, (ROWS - 4.2) * CH);
+        ctx.fillText(CAMPAIGN.watermark, 2 * CW, (ROWS - 1.5 - hudStep * 2) * CH);
         ctx.fillStyle = "#7a859e";
         ctx.fillText(
           `rotation ${deg.toFixed(2).padStart(6, "0")}°    lit ${litBulbsCount}/${totalBulbs}`,
           2 * CW,
-          (ROWS - 2.9) * CH
+          (ROWS - 1.5 - hudStep) * CH
         );
         ctx.fillText(
           `tree ${DONORS.length}/${treeStats.totalSlots}  qua-mon ${examCharmItems.length}  letters ${letterCount.toLocaleString("en-US")}`,
           2 * CW,
-          (ROWS - 1.6) * CH
+          (ROWS - 1.5) * CH
         );
 
         requestAnimationFrame(render);

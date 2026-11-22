@@ -42,6 +42,48 @@
       cursor: grabbing;
     }
 
+    /* LOGO CLB GÓC TRÊN BÊN PHẢI */
+    #clubLogoBox {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: rgba(12, 16, 26, 0.86);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 196, 90, 0.35);
+      border-radius: 10px;
+      padding: 6px 11px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    }
+    #clubLogoImg {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #clubLogoFallback {
+      display: none;
+      font-size: 11px;
+      color: #ffe28a;
+      background: rgba(255, 196, 90, 0.14);
+      border: 1px dashed rgba(255, 196, 90, 0.55);
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #clubLogoBox span.club-name {
+      font-size: 11.5px;
+      font-weight: bold;
+      color: #ffe28a;
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+    }
+
     /* Cụm nút điều khiển góc dưới phải */
     #controls {
       position: fixed;
@@ -51,8 +93,8 @@
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 8px;
-      z-index: 10;
-      opacity: 0.82;
+      z-index: 15;
+      opacity: 0.9;
       transition: opacity 0.2s;
     }
     #controls:hover {
@@ -74,6 +116,12 @@
       border-color: #ffc45a;
       color: #fff;
     }
+    .btn-charm {
+      background: rgba(255, 196, 90, 0.15);
+      border-color: rgba(255, 196, 90, 0.52);
+      color: #ffe28a;
+      font-weight: bold;
+    }
 
     /* Bảng tiến độ gây quỹ & tìm vị trí người mua */
     #fundraiserBox {
@@ -81,7 +129,7 @@
       top: 12px;
       left: 14px;
       z-index: 20;
-      width: 315px;
+      width: 322px;
       max-width: calc(100vw - 28px);
       background: rgba(12, 16, 26, 0.86);
       backdrop-filter: blur(8px);
@@ -116,7 +164,6 @@
       background: linear-gradient(90deg, #ff5b62, #ffc45a, #4cd97b);
       transition: width 0.4s ease;
     }
-    /* Vạch mốc 50% trên thanh tiến độ */
     .milestone-tick {
       position: absolute;
       left: 50%;
@@ -178,6 +225,12 @@
       text-align: center;
       color: #9aa7c2;
     }
+    .quota-chip.vault-chip {
+      background: rgba(255, 196, 90, 0.12);
+      border-color: rgba(255, 196, 90, 0.38);
+      color: #ffe28a;
+      cursor: pointer;
+    }
     #searchInput {
       width: 100%;
       background: rgba(255, 255, 255, 0.07);
@@ -199,8 +252,8 @@
       flex-wrap: wrap;
     }
     .tab-btn {
-      padding: 3px 7px;
-      font-size: 11px;
+      padding: 3px 6px;
+      font-size: 10.5px;
       border-radius: 5px;
       background: rgba(255, 255, 255, 0.05);
     }
@@ -211,18 +264,22 @@
     }
     #donorList {
       margin-top: 8px;
-      max-height: 195px;
+      max-height: 190px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 5px;
       padding-right: 2px;
     }
-    #donorList::-webkit-scrollbar {
+    #donorList::-webkit-scrollbar,
+    .vault-grid::-webkit-scrollbar,
+    .wish-card::-webkit-scrollbar {
       width: 4px;
     }
-    #donorList::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
+    #donorList::-webkit-scrollbar-thumb,
+    .vault-grid::-webkit-scrollbar-thumb,
+    .wish-card::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.22);
       border-radius: 4px;
     }
     .donor-item {
@@ -273,16 +330,16 @@
       transform: translate(12px, -50%);
     }
 
-    /* Thiệp Điều Ước / Bùa May Mắn */
+    /* THIỆP ĐIỀU ƯỚC & HIỂN THỊ MẪU THIẾT KẾ BÙA */
     #wishModal {
       position: fixed;
       inset: 0;
-      z-index: 30;
+      z-index: 40;
       display: none;
       align-items: center;
       justify-content: center;
-      background: rgba(4, 6, 12, 0.55);
-      backdrop-filter: blur(3px);
+      background: rgba(4, 6, 12, 0.65);
+      backdrop-filter: blur(4px);
       padding: 16px;
     }
     #wishModal.visible {
@@ -290,12 +347,14 @@
     }
     .wish-card {
       width: 100%;
-      max-width: 390px;
-      background: linear-gradient(160deg, #13192b 0%, #0d111d 100%);
-      border: 1px solid rgba(255, 196, 90, 0.55);
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: linear-gradient(160deg, #151c30 0%, #0c101b 100%);
+      border: 1px solid rgba(255, 196, 90, 0.58);
       border-radius: 14px;
       padding: 20px;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.78);
       position: relative;
       animation: popCard 0.22s ease-out;
     }
@@ -309,6 +368,7 @@
       right: 12px;
       padding: 3px 8px;
       font-size: 13px;
+      z-index: 2;
     }
     .wish-tag {
       display: inline-block;
@@ -319,6 +379,27 @@
       padding: 3px 8px;
       border-radius: 99px;
       margin-bottom: 10px;
+    }
+    .wish-art-frame {
+      display: none;
+      margin: 2px auto 12px auto;
+      padding: 7px;
+      border-radius: 10px;
+      background: radial-gradient(circle, rgba(255, 210, 90, 0.2) 0%, rgba(255, 255, 255, 0.03) 75%);
+      border: 1px solid rgba(255, 196, 90, 0.42);
+      text-align: center;
+    }
+    .wish-art-frame.show {
+      display: block;
+    }
+    .wish-art-frame img {
+      max-width: 100%;
+      max-height: 250px;
+      width: auto;
+      border-radius: 7px;
+      display: block;
+      margin: 0 auto;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
     }
     .wish-owner {
       font-size: 16px;
@@ -347,11 +428,165 @@
       font-size: 11px;
       color: #8b98b3;
     }
+
+    /* KHO LƯU TRỮ BÙA QUA MÔN */
+    #charmVaultModal {
+      position: fixed;
+      inset: 0;
+      z-index: 35;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(4, 6, 12, 0.74);
+      backdrop-filter: blur(5px);
+      padding: 16px;
+    }
+    #charmVaultModal.visible {
+      display: flex;
+    }
+    .vault-panel {
+      width: 100%;
+      max-width: 780px;
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(165deg, #131a2d 0%, #0a0e18 100%);
+      border: 1px solid rgba(255, 196, 90, 0.5);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.85);
+      animation: popCard 0.22s ease-out;
+    }
+    .vault-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .vault-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #ffe28a;
+    }
+    .vault-sub {
+      font-size: 11.5px;
+      color: #9aa7c2;
+      margin-top: 3px;
+    }
+    #vaultSearch {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 7px 10px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+    #vaultSearch:focus {
+      border-color: #ffc45a;
+    }
+    .vault-grid {
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: 10px;
+      padding-right: 4px;
+    }
+    .vault-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 196, 90, 0.24);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .vault-card:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 196, 90, 0.12);
+      border-color: #ffc45a;
+    }
+    .vault-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10.5px;
+      color: #ffc45a;
+    }
+    .vault-card-thumb {
+      width: 100%;
+      height: 110px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.28);
+      padding: 4px;
+    }
+    .vault-card-name {
+      font-size: 12.5px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .vault-card-wish {
+      font-size: 11px;
+      color: #c2cde3;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Hộp báo lỗi tự động nếu sửa nhầm dấu phẩy trong code */
+    #errorBanner {
+      display: none;
+      position: fixed;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99;
+      background: rgba(180, 30, 40, 0.95);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid #ff9aa2;
+      font-size: 12px;
+      max-width: 92vw;
+    }
+
+    @media (max-width: 680px) {
+      #clubLogoBox {
+        top: auto;
+        bottom: 54px;
+        right: 14px;
+        padding: 4px 8px;
+      }
+      #clubLogoImg {
+        height: 26px;
+      }
+      #clubLogoBox span.club-name {
+        font-size: 10.5px;
+      }
+    }
   </style>
 </head>
 <body>
   <div id="wrapper">
     <canvas id="screen"></canvas>
+    <div id="errorBanner"></div>
+
+    <!-- LOGO CLB GÓC TRÊN BÊN PHẢI -->
+    <div id="clubLogoBox">
+      <img id="clubLogoImg" src="logo-clb.png" alt="Logo CLB" title="Bấm để đổi ảnh logo CLB" />
+      <span id="clubLogoFallback" title="Bấm để chọn ảnh logo CLB từ máy">+ Chọn Logo</span>
+      <input type="file" id="logoFileInput" accept="image/*" style="display:none;" />
+      <span class="club-name">CLB HIẾN MÁU ĐHTN</span>
+    </div>
 
     <!-- Bảng tiến độ gây quỹ & tìm vị trí người mua -->
     <div id="fundraiserBox">
@@ -374,16 +609,17 @@
 
       <div id="fundraiserBody">
         <div class="quota-grid" id="quotaGrid"></div>
-        <input type="text" id="searchInput" placeholder="Nhập tên hoặc mã (VD: MS01)..." />
+        <input type="text" id="searchInput" placeholder="Nhập tên hoặc mã (VD: MS01, QM01)..." />
         <div class="filter-tabs">
           <button type="button" class="tab-btn active" data-filter="all">Tất cả</button>
-          <button type="button" class="tab-btn" data-filter="charm">🧧 Bùa ước</button>
+          <button type="button" class="tab-btn" data-filter="qua_mon">🎓 Bùa qua môn</button>
+          <button type="button" class="tab-btn" data-filter="charm">🧧 Bùa cây</button>
           <button type="button" class="tab-btn" data-filter="light">💡 Cụm đèn</button>
           <button type="button" class="tab-btn" data-filter="ornament">🎁 Quà/Châu/Tất</button>
         </div>
         <div id="donorList"></div>
-        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-size: 10.5px; color: #7a859e;">Bấm tên để xoay tới vị trí</span>
+        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+          <button type="button" id="btnOpenVaultSmall" class="btn-charm" style="padding: 3px 8px; font-size: 11px;">🎓 Xem kho bùa qua môn</button>
           <button type="button" id="btnClearFocus" style="padding: 3px 7px; font-size: 11px; display: none;">Bỏ chọn</button>
         </div>
       </div>
@@ -392,24 +628,45 @@
     <!-- Tooltip nổi theo chuột -->
     <div id="hoverTip"></div>
 
-    <!-- Thiệp hiện điều ước khi ấn vào vật phẩm -->
+    <!-- Thiệp hiện điều ước & mẫu thiết kế bùa -->
     <div id="wishModal">
       <div class="wish-card">
         <button type="button" class="wish-close" id="btnCloseModal">✕</button>
         <div class="wish-tag" id="modalBadge">🧧 Bùa May Mắn</div>
+        <div class="wish-art-frame" id="modalArtFrame">
+          <img id="modalArtImg" src="" alt="Mẫu thiết kế bùa" />
+        </div>
         <div class="wish-owner" id="modalOwner">Tên người gửi</div>
         <div class="wish-content" id="modalWish">Lời chúc...</div>
         <div class="wish-actions">
-          <span class="wish-hint">Vị trí đang phát sáng trên cây</span>
+          <span class="wish-hint" id="modalHint">Vị trí đang phát sáng trên cây</span>
           <button type="button" id="btnCopyLink">🔗 Chép link của tôi</button>
         </div>
       </div>
     </div>
 
-    <!-- Đặt file nhạc .mp3 cùng thư mục với index.html -->
+    <!-- Kho lưu trữ Bùa Qua Môn (Không gắn lên cây thông) -->
+    <div id="charmVaultModal">
+      <div class="vault-panel">
+        <div class="vault-header">
+          <div>
+            <div class="vault-title" id="vaultTitle">🎓 KHO BÙA QUA MÔN (0 LÁ BÙA)</div>
+            <div class="vault-sub">Bấm vào lá bùa của bạn để xem mẫu thiết kế, lời chúc và lấy link chia sẻ</div>
+          </div>
+          <button type="button" id="btnCloseVault" style="padding: 4px 10px;">✕ Đóng</button>
+        </div>
+        <input type="text" id="vaultSearch" placeholder="Tìm tên của bạn hoặc mã bùa (VD: QM01)..." />
+        <div class="vault-grid" id="vaultGrid"></div>
+        <div style="margin-top: 10px; text-align: center;">
+          <button type="button" id="btnLoadMoreVault" style="display: none;">Xem thêm lá bùa ▼</button>
+        </div>
+      </div>
+    </div>
+
     <audio id="bgMusic" src="last-christmas.mp3" loop preload="auto"></audio>
 
     <div id="controls">
+      <button id="btnOpenVault" class="btn-charm">🎓 Bùa Qua Môn</button>
       <button id="btnMusic">M: Music Off</button>
       <button id="btnPause">Space: Pause</button>
       <button id="btnRestart">R: Restart</button>
@@ -418,85 +675,151 @@
   </div>
 
   <script>
+    window.addEventListener("error", (ev) => {
+      const box = document.getElementById("errorBanner");
+      if (box) {
+        box.style.display = "block";
+        box.textContent = "Lỗi mã nguồn ở dòng " + ev.lineno + ": " + ev.message;
+      }
+    });
+
     (() => {
       // =====================================================================
-      // 1. CẤU HÌNH CHIẾN DỊCH GÂY QUỸ (4 BÓNG ĐÈN / LƯỢT & MỐC 50% - 100%)
+      // 1. CẤU HÌNH CHIẾN DỊCH & MẪU THIẾT KẾ BÙA
       // =====================================================================
       const CAMPAIGN = {
         title: "🎄 THẮP SÁNG CÂY THÔNG 2026",
-        lightsPerPurchase: 4,    // Mỗi lượt mua đèn sẽ thắp sáng 1 chùm 4 bóng gần nhau (42 suất x 4 = 168 bóng)
-        showUnlitBulbs: true,    // Hiện bóng chưa mua dưới dạng chấm mờ tối chờ thắp sáng
+        lightsPerPurchase: 4,
+        showUnlitBulbs: true,
         message: "M E R R Y   C H R I S T M A S   2 0 2 6",
         watermark: "@ascii.christmas",
-        // Phân bổ 137 suất chuẩn thẩm mỹ 3D & trọng số tính % hoàn thành cây (Tổng = 328 điểm = 100%)
+
+        charmDesigns: {
+          qua_mon: "bua-qua-mon.png",
+          jade:    "bua-binh-an.png",
+          gold:    "bua-tai-loc.png",
+          red:     "bua-may-man.png"
+        },
+
         quotas: {
           light:    { max: 42, weight: 1.5, icon: "💡", short: "Đèn" },
           bauble:   { max: 30, weight: 2.0, icon: "🔮", short: "Châu" },
           stocking: { max: 20, weight: 2.5, icon: "🧦", short: "Tất" },
-          charm:    { max: 25, weight: 3.0, icon: "🧧", short: "Bùa" },
+          charm:    { max: 25, weight: 3.0, icon: "🧧", short: "Bùa cây" },
           gift:     { max: 20, weight: 4.0, icon: "🎁", short: "Quà" }
         }
       };
 
-      // HƯỚNG DẪN MỞ KHÓA KHI CÓ LƯỢT MUA MỚI:
-      // - Xóa dấu "//" ở đầu dòng tương ứng, điền tên người mua (name) và điều ước (wish).
-      // - Có thể nhân bản thêm tối đa tới 137 dòng theo đúng giới hạn từng loại ở trên.
+      // DANH SÁCH GẮN TRỰC TIẾP LÊN CÂY THÔNG (TỐI ĐA 137 SUẤT MS)
       const DONORS = [
-        // --- 5 MẪU ĐANG MỞ SẴN ---
         { id: "MS01", type: "charm",    name: "Minh Suông",   color: "jade",   wish: "Chúc chiến dịch gây quỹ thành công rực rỡ và lan tỏa thật nhiều yêu thương mùa Giáng Sinh!" },
         { id: "MS02", type: "light",    name: "Hồng Ly",      color: "gold",   wish: "Mong mọi điều bình an, may mắn và hạnh phúc sẽ luôn mỉm cười với tất cả chúng ta." },
         { id: "MS03", type: "gift",     name: "Mạnh Sơn",     color: "red",    wish: "Gửi một hộp quà nhỏ góp sức cùng chương trình. Merry Christmas 2026!" },
         { id: "MS04", type: "stocking", name: "Lớp YK22C",    color: "red",    wish: "Chúc các bạn sinh viên luôn vững tay nghề, ấm áp và tràn đầy nhiệt huyết!" },
-        { id: "MS05", type: "bauble",   name: "CLB Hiến Máu", color: "gold",   wish: "Mỗi ngọn đèn sáng lên là một trái tim sẻ chia được kết nối." },
+        { id: "MS05", type: "bauble",   name: "CLB Hiến Máu", color: "gold",   wish: "Mỗi ngọn đèn sáng lên là một trái tim sẻ chia được kết nối." }
 
-        // --- CÁC SLOT CHỜ SẴN (XÓA "//" ĐỂ KÍCH HOẠT TỪNG LƯỢT MUA) ---
         // { id: "MS06", type: "light",    name: "Người ủng hộ #06", color: "gold",   wish: "Chúc Giáng Sinh an lành và ấm áp!" },
         // { id: "MS07", type: "charm",    name: "Người ủng hộ #07", color: "gold",   wish: "Ước cho kỳ thi sắp tới qua môn thuận lợi và đạt kết quả cao!" },
         // { id: "MS08", type: "bauble",   name: "Người ủng hộ #08", color: "red",    wish: "Góp một quả châu đỏ cho cây thông thêm rực rỡ!" },
         // { id: "MS09", type: "gift",     name: "Người ủng hộ #09", color: "green",  wish: "Chúc mọi điều tốt đẹp nhất sẽ đến với mọi người." },
-        // { id: "MS10", type: "stocking", name: "Người ủng hộ #10", color: "red",    wish: "Treo chiếc tất nhỏ gửi gắm niềm vui mùa lễ hội!" },
-        // { id: "MS11", type: "light",    name: "Người ủng hộ #11", color: "gold",   wish: "Thắp sáng thêm một góc cây thông yêu thương." },
-        // { id: "MS12", type: "charm",    name: "Người ủng hộ #12", color: "jade",   wish: "Cầu chúc gia đình luôn mạnh khỏe, bình an." },
-        // { id: "MS13", type: "bauble",   name: "Người ủng hộ #13", color: "silver", wish: "Giáng Sinh vui vẻ và hạnh phúc nhé!" },
-        // { id: "MS14", type: "gift",     name: "Người ủng hộ #14", color: "blue",   wish: "Một món quà nhỏ gửi tới chương trình." },
-        // { id: "MS15", type: "stocking", name: "Người ủng hộ #15", color: "red",    wish: "Chúc mùa đông này thật ấm áp!" },
-        // { id: "MS16", type: "light",    name: "Người ủng hộ #16", color: "gold",   wish: "Cùng nhau chạm mốc 50% để bật dây kim tuyến vàng nào!" },
-        // { id: "MS17", type: "charm",    name: "Người ủng hộ #17", color: "gold",   wish: "Ước mọi dự định trong năm mới đều thành hiện thực." },
-        // { id: "MS18", type: "bauble",   name: "Người ủng hộ #18", color: "gold",   wish: "Merry Christmas & Happy New Year!" },
-        // { id: "MS19", type: "gift",     name: "Người ủng hộ #19", color: "gold",   wish: "Gửi ngàn lời chúc tốt đẹp nhất tới mọi người!" },
-        // { id: "MS20", type: "stocking", name: "Người ủng hộ #20", color: "red",    wish: "Chúc chương trình lan tỏa thật nhiều niềm vui." },
-        // { id: "MS21", type: "light",    name: "Người ủng hộ #21", color: "gold",   wish: "Thêm 4 ngọn đèn nhỏ cho cây thông thêm lung linh." },
-        // { id: "MS22", type: "charm",    name: "Người ủng hộ #22", color: "jade",   wish: "Chúc tất cả chúng ta một mùa Giáng Sinh đáng nhớ." },
-        // { id: "MS23", type: "bauble",   name: "Người ủng hộ #23", color: "red",    wish: "Góp sắc đỏ may mắn cho mùa lễ hội!" },
-        // { id: "MS24", type: "light",    name: "Người ủng hộ #24", color: "gold",   wish: "Chung tay thắp sáng ngôi sao đỉnh cây!" },
-        // { id: "MS25", type: "gift",     name: "Người ủng hộ #25", color: "red",    wish: "Món quà tập thể gửi tặng chiến dịch." }
+        // { id: "MS10", type: "stocking", name: "Người ủng hộ #10", color: "red",    wish: "Treo chiếc tất nhỏ gửi gắm niềm vui mùa lễ hội!" }
       ];
 
-      // Tính toán % hoàn thành cây dựa trên trọng số từng vật phẩm
+      // KHO DỰ TRỮ BÙA QUA MÔN (KHÔNG GIỚI HẠN, KHÔNG GẮN LÊN CÂY THÔNG)
+      const EXAM_CHARMS = [
+        { id: "QM01", name: "Minh Suông",   wish: "Cầu cho kỳ thi cuối kỳ suôn sẻ, tất cả các môn đều qua nhẹ nhàng, điểm cao ngoài mong đợi!" },
+        { id: "QM02", name: "Hồng Ly",      wish: "Chúc ôn đâu trúng đó, vào phòng thi bình tĩnh tự tin, làm bài trôi chảy đạt A+!" },
+        { id: "QM03", name: "Tổ 1 YK22C",   wish: "Đêm ôn bài tỉnh táo, sáng thi minh mẫn, cả tổ cùng nắm tay nhau qua môn rực rỡ!" }
+
+        // { id: "QM04", name: "Người mua #04", wish: "Cầu cho tất cả các môn học kỳ này đều qua thẳng một lèo, không phải gặp lại môn nào!" },
+        // { id: "QM05", name: "Người mua #05", wish: "Chúc bản thân ôn trúng tủ 100%, đọc đề tới đâu nhớ bài tới đó, tự tin bứt phá GPA!" },
+        // { id: "QM06", name: "Người mua #06", wish: "Thi lý thuyết trôi chảy, thi thực hành lâm sàng vững vàng, bình tĩnh xử lý mọi tình huống!" },
+        // { id: "QM07", name: "Người mua #07", wish: "Gửi lá bùa may mắn cầu cho kỳ thi sắp tới thuận buồm xuôi gió, đạt điểm B+ và A!" },
+        // { id: "QM08", name: "Người mua #08", wish: "Mong thần may mắn mỉm cười trong từng câu trắc nghiệm, khoanh đâu đúng đó!" },
+        // { id: "QM09", name: "Người mua #09", wish: "Chúc kỳ thi chạy trạm OSCE thật bình tĩnh, thao tác chuẩn xác và đạt điểm tối đa!" },
+        // { id: "QM10", name: "Người mua #10", wish: "Cầu cho đề thi vừa sức, thầy cô chấm nương tay, qua môn trọn vẹn đón Tết vui vẻ!" },
+        // { id: "QM11", name: "Người mua #11", wish: "Vượt qua mọi môn đại cương và chuyên ngành thật nhẹ nhàng, giữ vững phong độ học bổng!" },
+        // { id: "QM12", name: "Người mua #12", wish: "Đêm trước ngày thi ngủ ngon giấc, sáng bước vào phòng thi đầu óc sáng suốt, viết bài mượt mà!" },
+        // { id: "QM13", name: "Người mua #13", wish: "Chúc nhóm học tập của chúng ta ai cũng qua môn điểm cao, không ai bị rớt lại phía sau!" },
+        // { id: "QM14", name: "Người mua #14", wish: "Thoát nợ tín chỉ thành công, bảng điểm xanh mướt toàn A với B!" },
+        // { id: "QM15", name: "Người mua #15", wish: "Thi vấn đáp trả lời trôi chảy, tự tin thuyết phục thầy cô từ câu hỏi đầu tiên!" },
+        // { id: "QM16", name: "Người mua #16", wish: "Mọi nỗ lực thức khuya ôn bài đều được đền đáp xứng đáng bằng kết quả qua môn rực rỡ!" },
+        // { id: "QM17", name: "Người mua #17", wish: "Cầu cho môn khó nhất kỳ này cũng hóa nhẹ nhàng, làm bài dư giờ kiểm tra lại!" },
+        // { id: "QM18", name: "Người mua #18", wish: "Gửi chút may mắn mùa Giáng Sinh để kỳ thi cuối năm suôn sẻ từ môn đầu tới môn cuối!" },
+        // { id: "QM19", name: "Người mua #19", wish: "Chúc phòng thi mát mẻ, đề thi thân thiện, kiến thức đã ôn hiện ra rõ mồn một!" },
+        // { id: "QM20", name: "Người mua #20", wish: "Bình tĩnh – Tự tin – Trúng tủ – Qua môn điểm cao!" }
+      ];
+
+      // =====================================================================
+      // XỬ LÝ LOGO CLB (TỰ DÒ ĐUÔI FILE + CHO CHỌN ẢNH TRỰC TIẾP NẾU THIẾU)
+      // =====================================================================
+      const clubLogoImg = document.getElementById("clubLogoImg");
+      const clubLogoFallback = document.getElementById("clubLogoFallback");
+      const logoFileInput = document.getElementById("logoFileInput");
+      const logoCandidates = [
+        "logo-clb.png",
+        "logo-clb.jpg",
+        "logo-clb.jpeg",
+        "logo-clb.webp",
+        "logo-clb.png.png",
+        "logo.png",
+        "logo.jpg"
+      ];
+      let logoTryIdx = 0;
+
+      try {
+        const savedLogo = localStorage.getItem("clb_logo_dataurl");
+        if (savedLogo) clubLogoImg.src = savedLogo;
+      } catch (_) {}
+
+      clubLogoImg.onerror = () => {
+        logoTryIdx++;
+        if (logoTryIdx < logoCandidates.length) {
+          clubLogoImg.src = logoCandidates[logoTryIdx];
+        } else {
+          clubLogoImg.style.display = "none";
+          clubLogoFallback.style.display = "inline-block";
+        }
+      };
+      clubLogoImg.onload = () => {
+        clubLogoImg.style.display = "block";
+        clubLogoFallback.style.display = "none";
+      };
+      clubLogoFallback.addEventListener("click", () => logoFileInput.click());
+      clubLogoImg.addEventListener("click", () => logoFileInput.click());
+      logoFileInput.addEventListener("change", (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          clubLogoImg.src = reader.result;
+          try { localStorage.setItem("clb_logo_dataurl", reader.result); } catch (_) {}
+        };
+        reader.readAsDataURL(file);
+      });
+
+      const examCharmItems = EXAM_CHARMS.map(item => ({ ...item, type: "qua_mon" }));
+      const allSearchableItems = [...DONORS, ...examCharmItems];
+
       function getTreeCompletion() {
-        const maxPoints = Object.values(CAMPAIGN.quotas)
-          .reduce((sum, q) => sum + q.max * q.weight, 0);
-
-        const currentPoints = DONORS.reduce((sum, d) => {
-          const w = CAMPAIGN.quotas[d.type]?.weight || 1.5;
-          return sum + w;
-        }, 0);
-
-        // Hỗ trợ xem trước nhanh hiệu ứng mốc qua URL (?demo=50 hoặc ?demo=100)
-        const demoParam = Number(new URLSearchParams(window.location.search).get("demo"));
+        const maxPoints = Object.values(CAMPAIGN.quotas).reduce((sum, q) => sum + q.max * q.weight, 0);
+        const currentPoints = DONORS.reduce((sum, d) => sum + (CAMPAIGN.quotas[d.type]?.weight || 1.5), 0);
+        let demoParam = 0;
+        try {
+          demoParam = Number(new URLSearchParams(window.location.search).get("demo"));
+        } catch (_) {}
         const rawPercent = Math.min(100, Math.round((currentPoints / maxPoints) * 100));
         const percent = (demoParam === 50 || demoParam === 100) ? demoParam : rawPercent;
         const totalSlots = Object.values(CAMPAIGN.quotas).reduce((s, q) => s + q.max, 0);
-
         return { percent, currentPoints, maxPoints, totalSlots };
       }
 
       const treeStats = getTreeCompletion();
-      const HAS_TINSEL = treeStats.percent >= 50; // Mốc 50%: Bật dây kim tuyến vàng rực
-      const HAS_STAR = treeStats.percent >= 100;  // Mốc 100%: Thắp sáng ngôi sao đỉnh cây
+      const HAS_TINSEL = treeStats.percent >= 50;
+      const HAS_STAR = treeStats.percent >= 100;
 
       // =====================================================================
-      // 2. CẤU HÌNH LƯỚI ASCII & THÔNG SỐ HIỂN THỊ
+      // 2. CẤU HÌNH LƯỚI ASCII & KHUNG VẼ AN TOÀN
       // =====================================================================
       const canvas = document.getElementById("screen");
       const ctx = canvas.getContext("2d");
@@ -515,14 +838,16 @@
       ctx.scale(dpr, dpr);
 
       function fitCanvas() {
-        const scale = Math.min(
-          window.innerWidth / (COLS * CW),
-          window.innerHeight / (ROWS * CH)
-        );
-        canvas.style.width = `${Math.floor(COLS * CW * scale)}px`;
-        canvas.style.height = `${Math.floor(ROWS * CH * scale)}px`;
+        const w = window.innerWidth || document.documentElement.clientWidth || 960;
+        const h = window.innerHeight || document.documentElement.clientHeight || 740;
+        const scale = Math.min(w / (COLS * CW), h / (ROWS * CH));
+        if (scale > 0) {
+          canvas.style.width = `${Math.floor(COLS * CW * scale)}px`;
+          canvas.style.height = `${Math.floor(ROWS * CH * scale)}px`;
+        }
       }
       window.addEventListener("resize", fitCanvas);
+      window.addEventListener("load", fitCanvas);
       fitCanvas();
 
       // =====================================================================
@@ -587,7 +912,8 @@
         bauble:   { icon: "🔮", label: "Quả Châu" },
         gift:     { icon: "🎁", label: "Hộp Quà" },
         stocking: { icon: "🧦", label: "Tất Giáng Sinh" },
-        charm:    { icon: "🧧", label: "Bùa May Mắn" }
+        charm:    { icon: "🧧", label: "Bùa Treo Cây" },
+        qua_mon:  { icon: "🎓", label: "Bùa Qua Môn" }
       };
 
       // =====================================================================
@@ -597,11 +923,11 @@
       const Y0 = -0.68;
       const Y1 = 1.05;
 
-      const T_GROW = [1.0, 4.6];
-      const T_GARLAND = [4.8, 7.2];
-      const T_ORNAMENTS = [6.0, 9.6];
-      const T_STAR = 10.4;
-      const T_MSG = 11.4;
+      const T_GROW = [0.2, 3.6];
+      const T_GARLAND = [3.8, 6.0];
+      const T_ORNAMENTS = [4.8, 8.2];
+      const T_STAR = 8.8;
+      const T_MSG = 9.6;
 
       function envelope(y) {
         const u = clamp((y - Y0) / (Y1 - Y0), 0, 1);
@@ -616,7 +942,7 @@
       let groundPts = [];
       let stars = [];
       let donorAnchors = [];
-      let bulbTargets = []; // Danh sách từng bóng đèn đã sáng để click trực tiếp
+      let bulbTargets = [];
       let totalBulbs = 0;
       let litBulbsCount = 0;
 
@@ -630,7 +956,6 @@
         });
       }
 
-      // Quả châu 3D
       function spawnBauble(donor, slotIdx) {
         const sphere = fibSphere(145);
         const u = ((slotIdx * 0.6180339) % 1);
@@ -645,16 +970,11 @@
         const t0 = T_ORNAMENTS[0] + (slotIdx % 8) * 0.25;
 
         for (const [sx, sy, sz] of sphere) {
-          addPoint(
-            cx + sx * rad, cy + sy * rad, cz + sz * rad,
-            sx, sy, sz, col, "BALL", t0, 1.0, 0,
-            cx, cy, cz, true, donor.id, true
-          );
+          addPoint(cx + sx * rad, cy + sy * rad, cz + sz * rad, sx, sy, sz, col, "BALL", t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
         }
         donorAnchors.push({ donor, x: cx, y: cy, z: cz, radius: 14 });
       }
 
-      // Tất Giáng Sinh 3D treo trên nhánh thông
       function spawnStocking(donor, slotIdx) {
         const u = (((slotIdx + 0.35) * 0.6180339) % 1);
         const y = Y0 + 0.14 + u * (Y1 - Y0 - 0.42);
@@ -672,44 +992,26 @@
         for (let i = 0; i < 65; i++) {
           const ang = (i / 65) * TAU * 3;
           const dy = (i / 65) * 0.028;
-          const rad = 0.036;
-          const lx = Math.cos(ang) * rad;
-          const lz = Math.sin(ang) * rad;
-          addPoint(
-            cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz,
-            rx * Math.cos(ang) + tx * Math.sin(ang), 0.3, rz * Math.cos(ang) + tz * Math.sin(ang),
-            PALETTE_MAP.white, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true
-          );
+          const lx = Math.cos(ang) * 0.036, lz = Math.sin(ang) * 0.036;
+          addPoint(cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz, rx * Math.cos(ang) + tx * Math.sin(ang), 0.3, rz * Math.cos(ang) + tz * Math.sin(ang), PALETTE_MAP.white, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
         }
         for (let i = 0; i < 95; i++) {
           const ang = (i / 95) * TAU * 5;
           const dy = -(i / 95) * 0.095;
-          const rad = 0.031;
-          const lx = Math.cos(ang) * rad;
-          const lz = Math.sin(ang) * rad;
-          addPoint(
-            cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz,
-            rx * Math.cos(ang) + tx * Math.sin(ang), 0.1, rz * Math.cos(ang) + tz * Math.sin(ang),
-            bodyCol, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true
-          );
+          const lx = Math.cos(ang) * 0.031, lz = Math.sin(ang) * 0.031;
+          addPoint(cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz, rx * Math.cos(ang) + tx * Math.sin(ang), 0.1, rz * Math.cos(ang) + tz * Math.sin(ang), bodyCol, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
         }
         for (let i = 0; i < 75; i++) {
           const ang = (i / 75) * TAU * 4;
           const footShift = (i / 75) * 0.068;
           const rad = 0.028 * (1 - 0.25 * (i / 75));
-          const lx = Math.cos(ang) * rad;
-          const dy = -0.095 + Math.sin(ang) * rad;
-          addPoint(
-            cx + rx * lx + tx * footShift, cy + dy, cz + rz * lx + tz * footShift,
-            rx * Math.cos(ang), Math.sin(ang), rz * Math.cos(ang),
-            bodyCol, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true
-          );
+          const lx = Math.cos(ang) * rad, dy = -0.095 + Math.sin(ang) * rad;
+          addPoint(cx + rx * lx + tx * footShift, cy + dy, cz + rz * lx + tz * footShift, rx * Math.cos(ang), Math.sin(ang), rz * Math.cos(ang), bodyCol, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
         }
 
         donorAnchors.push({ donor, x: cx, y: cy - 0.04, z: cz, radius: 14 });
       }
 
-      // Bùa May Mắn (Thẻ Điều Ước) 3D đung đưa ở đầu nhánh
       function spawnCharm(donor, slotIdx) {
         const u = (((slotIdx + 0.7) * 0.6180339) % 1);
         const y = Y0 + 0.18 + u * (Y1 - Y0 - 0.44);
@@ -726,11 +1028,7 @@
         const coreCol = resolveColor(donor.color, PALETTE_MAP.jade);
 
         for (let s = 1; s <= 5; s++) {
-          addPoint(
-            cx, cy + 0.048 + s * 0.008, cz,
-            rx, 0.2, rz, PALETTE_MAP.gold, "CHARM_THREAD", t0, 0.9, phase,
-            cx, cy, cz, false, donor.id, true
-          );
+          addPoint(cx, cy + 0.048 + s * 0.008, cz, rx, 0.2, rz, PALETTE_MAP.gold, "CHARM_THREAD", t0, 0.9, phase, cx, cy, cz, false, donor.id, true);
         }
 
         const rows = 11;
@@ -746,14 +1044,7 @@
             const col = isBorder ? PALETTE_MAP.gold : (isCenter ? PALETTE_MAP.white : coreCol);
 
             for (const side of [-0.008, 0.008]) {
-              addPoint(
-                cx + tx * lx + rx * side,
-                cy + ly,
-                cz + tz * lx + rz * side,
-                rx * Math.sign(side), 0.15, rz * Math.sign(side),
-                col, "CHARM", t0, 1.05, phase,
-                cx, cy, cz, true, donor.id, true
-              );
+              addPoint(cx + tx * lx + rx * side, cy + ly, cz + tz * lx + rz * side, rx * Math.sign(side), 0.15, rz * Math.sign(side), col, "CHARM", t0, 1.05, phase, cx, cy, cz, true, donor.id, true);
             }
           }
         }
@@ -761,7 +1052,6 @@
         donorAnchors.push({ donor, x: cx, y: cy, z: cz, radius: 16 });
       }
 
-      // Hộp Quà 3D dưới gốc cây (2 vòng tròn quanh gốc: 8 hộp trong + 12 hộp ngoài)
       function spawnGift(donor, slotIdx) {
         const isOuter = slotIdx >= 8;
         const ringIdx = isOuter ? slotIdx - 8 : slotIdx;
@@ -789,47 +1079,31 @@
           let lx, ly, lz, nx, ny, nz, isRib;
 
           if (face === 0) {
-            lx = fa * w; ly = h; lz = fb * d;
-            nx = 0; ny = 1; nz = 0;
+            lx = fa * w; ly = h; lz = fb * d; nx = 0; ny = 1; nz = 0;
             isRib = Math.abs(lx) < 0.024 || Math.abs(lz) < 0.024;
           } else if (face === 1) {
-            lx = w / 2; ly = (fb + 0.5) * h; lz = fa * d;
-            nx = 1; ny = 0; nz = 0;
+            lx = w / 2; ly = (fb + 0.5) * h; lz = fa * d; nx = 1; ny = 0; nz = 0;
             isRib = Math.abs(lz) < 0.024;
           } else if (face === 2) {
-            lx = -w / 2; ly = (fb + 0.5) * h; lz = fa * d;
-            nx = -1; ny = 0; nz = 0;
+            lx = -w / 2; ly = (fb + 0.5) * h; lz = fa * d; nx = -1; ny = 0; nz = 0;
             isRib = Math.abs(lz) < 0.024;
           } else if (face === 3) {
-            lx = fa * w; ly = (fb + 0.5) * h; lz = d / 2;
-            nx = 0; ny = 0; nz = 1;
+            lx = fa * w; ly = (fb + 0.5) * h; lz = d / 2; nx = 0; ny = 0; nz = 1;
             isRib = Math.abs(lx) < 0.024;
           } else {
-            lx = fa * w; ly = (fb + 0.5) * h; lz = -d / 2;
-            nx = 0; ny = 0; nz = -1;
+            lx = fa * w; ly = (fb + 0.5) * h; lz = -d / 2; nx = 0; ny = 0; nz = -1;
             isRib = Math.abs(lx) < 0.024;
           }
 
           const wx = gx + lx * cosR - lz * sinR;
           const wy = GROUND + ly;
           const wz = gz + lx * sinR + lz * cosR;
-          const rnx = nx * cosR - nz * sinR;
-          const rnz = nx * sinR + nz * cosR;
-
-          addPoint(
-            wx, wy, wz, rnx, ny, rnz,
-            isRib ? ribCol : bodyCol, "GIFT", t0, 0.95, 0,
-            gx, GROUND + h * 0.5, gz, true, donor.id, true
-          );
+          addPoint(wx, wy, wz, nx * cosR - nz * sinR, ny, nx * sinR + nz * cosR, isRib ? ribCol : bodyCol, "GIFT", t0, 0.95, 0, gx, GROUND + h * 0.5, gz, true, donor.id, true);
         }
 
         const bowSphere = fibSphere(48);
         for (const [bx, by, bz] of bowSphere) {
-          addPoint(
-            gx + bx * 0.055, GROUND + h + 0.022 + by * 0.03, gz + bz * 0.055,
-            bx, by, bz, ribCol, "GIFT", t0 + 0.1, 1.0, 0,
-            gx, GROUND + h, gz, true, donor.id, true
-          );
+          addPoint(gx + bx * 0.055, GROUND + h + 0.022 + by * 0.03, gz + bz * 0.055, bx, by, bz, ribCol, "GIFT", t0 + 0.1, 1.0, 0, gx, GROUND + h, gz, true, donor.id, true);
         }
 
         donorAnchors.push({ donor, x: gx, y: GROUND + h * 0.55, z: gz, radius: 18 });
@@ -844,7 +1118,6 @@
         bulbTargets = [];
         const tips = [];
 
-        // A. Bầu trời sao nền
         for (let i = 0; i < 240; i++) {
           stars.push({
             col: Math.floor(rand() * COLS),
@@ -855,7 +1128,6 @@
           });
         }
 
-        // B. Mặt sàn chấm tròn
         for (let gx = -2.4; gx <= 2.4; gx += 0.16) {
           for (let gz = -2.4; gz <= 2.4; gz += 0.16) {
             const dist = Math.hypot(gx, gz);
@@ -865,7 +1137,6 @@
           }
         }
 
-        // C. Tán lá thông 24 tầng + Tuyết đầu cành
         const whorls = 24;
         for (let i = 0; i < whorls; i++) {
           const y = Y0 + 0.02 + ((Y1 - 0.06 - (Y0 + 0.02)) * i) / (whorls - 1);
@@ -901,12 +1172,7 @@
                 ? PALETTE_MAP.white
                 : [0.09 + 0.12 * rand(), 0.46 + 0.36 * rand(), 0.16 + 0.14 * rand()];
 
-              addPoint(
-                px, py, pz, nx, ny, nz, col,
-                isSnow ? "SNOW" : "NEEDLE",
-                growTime(y) + 0.45 * s,
-                isSnow ? 1.0 : ao
-              );
+              addPoint(px, py, pz, nx, ny, nz, col, isSnow ? "SNOW" : "NEEDLE", growTime(y) + 0.45 * s, isSnow ? 1.0 : ao);
             }
 
             const tl = 0.93 * L;
@@ -914,7 +1180,6 @@
           }
         }
 
-        // D. Lõi tối che mặt sau
         for (let i = 0; i < 6000; i++) {
           const y = Y0 + (Y1 - 0.1 - Y0) * rand();
           const phi = rand() * TAU;
@@ -923,7 +1188,6 @@
           addPoint(Math.cos(phi) * r, y, Math.sin(phi) * r, nx, ny, nz, [0.03, 0.14, 0.06], "CORE", growTime(y) + 0.2, 0.45);
         }
 
-        // E. Thân cây
         for (let i = 0; i < 1500; i++) {
           const y = GROUND + rand() * (Y0 + 0.1 - GROUND);
           const phi = rand() * TAU;
@@ -932,7 +1196,6 @@
           addPoint(nx * 0.085, y, nz * 0.085, nx, 0, nz, TRUNK_COL, "TRUNK", growTime(y), bark);
         }
 
-        // F. MỐC 50%: Chỉ bật Dây Kim Tuyến Vàng Rực khi hoàn thành cây >= 50%
         if (HAS_TINSEL) {
           const garlandSteps = 2000;
           const turns = 3.6;
@@ -944,24 +1207,12 @@
             const rg = envelope(yg) + 0.07;
 
             for (let j = 0; j < 4; j++) {
-              const [nx, ny, nz] = normalize(
-                Math.cos(ag) + 0.4 * gauss(),
-                0.3 + 0.4 * gauss(),
-                Math.sin(ag) + 0.4 * gauss()
-              );
-              addPoint(
-                Math.cos(ag) * rg + 0.016 * gauss(),
-                yg + swag + 0.016 * gauss(),
-                Math.sin(ag) * rg + 0.016 * gauss(),
-                nx, ny, nz, PALETTE_MAP.gold, "TINSEL",
-                T_GARLAND[0] + u * (T_GARLAND[1] - T_GARLAND[0]),
-                0.98, rand() * TAU
-              );
+              const [nx, ny, nz] = normalize(Math.cos(ag) + 0.4 * gauss(), 0.3 + 0.4 * gauss(), Math.sin(ag) + 0.4 * gauss());
+              addPoint(Math.cos(ag) * rg + 0.016 * gauss(), yg + swag + 0.016 * gauss(), Math.sin(ag) * rg + 0.016 * gauss(), nx, ny, nz, PALETTE_MAP.gold, "TINSEL", T_GARLAND[0] + u * (T_GARLAND[1] - T_GARLAND[0]), 0.98, rand() * TAU);
             }
           }
         }
 
-        // G. Phân bổ các vật phẩm trang trí của người ủng hộ
         const lightDonors = DONORS.filter(d => d.type === "light");
         const baubleDonors = DONORS.filter(d => d.type === "bauble");
         const giftDonors = DONORS.filter(d => d.type === "gift");
@@ -973,7 +1224,6 @@
         stockingDonors.forEach((d, idx) => spawnStocking(d, idx));
         charmDonors.forEach((d, idx) => spawnCharm(d, idx));
 
-        // H. Gom cụm 4 bóng đèn gần nhau thành 1 chùm (42 cụm x 4 bóng = 168 bóng)
         for (let i = tips.length - 1; i > 0; i--) {
           const j = Math.floor(rand() * (i + 1));
           [tips[i], tips[j]] = [tips[j], tips[i]];
@@ -992,11 +1242,7 @@
           const neighbors = [];
           for (let j = 0; j < rawTips.length; j++) {
             if (used[j]) continue;
-            const d = Math.hypot(
-              rawTips[j][0] - seedTip[0],
-              rawTips[j][1] - seedTip[1],
-              rawTips[j][2] - seedTip[2]
-            );
+            const d = Math.hypot(rawTips[j][0] - seedTip[0], rawTips[j][1] - seedTip[1], rawTips[j][2] - seedTip[2]);
             neighbors.push({ idx: j, dist: d });
           }
           neighbors.sort((a, b) => a.dist - b.dist);
@@ -1019,15 +1265,11 @@
           if (!isLit && !CAMPAIGN.showUnlitBulbs) return;
 
           const t0 = T_ORNAMENTS[0] + 0.15 + (clusterIdx / clusters.length) * 2.1;
-          const col = isLit
-            ? resolveColor(owner.color, PALETTE_MAP.warm)
-            : UNLIT_COL;
+          const col = isLit ? resolveColor(owner.color, PALETTE_MAP.warm) : UNLIT_COL;
 
           let sumX = 0, sumY = 0, sumZ = 0;
           for (const [cx, cy, cz] of clusterTips) {
-            sumX += cx;
-            sumY += cy;
-            sumZ += cz;
+            sumX += cx; sumY += cy; sumZ += cz;
             if (isLit) {
               litBulbsCount++;
               bulbTargets.push({ donor: owner, x: cx, y: cy, z: cz, radius: 13 });
@@ -1035,18 +1277,10 @@
 
             const phase = rand() * TAU;
             for (const [bx, by, bz] of bulb) {
-              addPoint(
-                cx + bx * 0.029, cy + by * 0.029, cz + bz * 0.029,
-                bx, by, bz, col, "LIGHT", t0,
-                isLit ? 1.0 : 0.28, phase,
-                cx, cy, cz, isLit,
-                owner ? owner.id : null,
-                isLit
-              );
+              addPoint(cx + bx * 0.029, cy + by * 0.029, cz + bz * 0.029, bx, by, bz, col, "LIGHT", t0, isLit ? 1.0 : 0.28, phase, cx, cy, cz, isLit, owner ? owner.id : null, isLit);
             }
           }
 
-          // Tâm chùm 4 bóng để camera xoay chính diện & gắn nhãn tên chủ nhân
           if (owner && clusterTips.length > 0) {
             donorAnchors.push({
               donor: owner,
@@ -1062,7 +1296,7 @@
       buildScene();
 
       // =====================================================================
-      // 5. PHÉP CHIẾU 3D -> 2D & VẼ NGÔI SAO ĐỈNH CÂY (MỐC 100%)
+      // 5. PHÉP CHIẾU 3D -> 2D & VẼ NGÔI SAO ĐỈNH CÂY
       // =====================================================================
       const camZ = 3.25;
       const sinP = Math.sin(0.15);
@@ -1164,7 +1398,7 @@
       }
 
       // =====================================================================
-      // 6. QUẢN LÝ TƯƠNG TÁC GÂY QUỸ, TÌM VỊ TRÍ & BÙA MAY MẮN
+      // 6. QUẢN LÝ TƯƠNG TÁC GÂY QUỸ, TÌM VỊ TRÍ & KHO BÙA QUA MÔN
       // =====================================================================
       let elapsed = 0;
       let angle = 0;
@@ -1181,7 +1415,6 @@
       const hoverTip = document.getElementById("hoverTip");
       const wishModal = document.getElementById("wishModal");
 
-      // Cập nhật thanh tiến độ % hoàn thành cây & trạng thái 2 mốc mở khóa
       document.getElementById("campaignTitle").textContent = CAMPAIGN.title;
       document.getElementById("progressBar").style.width = `${treeStats.percent}%`;
       document.getElementById("progressText").textContent = `Hoàn thành cây: ${treeStats.percent}% (${DONORS.length}/${treeStats.totalSlots})`;
@@ -1198,7 +1431,6 @@
         pill100.textContent = "✅ 100%: Ngôi sao đỉnh";
       }
 
-      // Hiển thị số suất còn trống của từng loại vật phẩm
       const quotaGrid = document.getElementById("quotaGrid");
       Object.entries(CAMPAIGN.quotas).forEach(([key, q]) => {
         const usedCount = DONORS.filter(d => d.type === key).length;
@@ -1208,6 +1440,13 @@
         chip.textContent = `${q.icon} ${q.short}: còn ${left}/${q.max}`;
         quotaGrid.appendChild(chip);
       });
+
+      const vaultChip = document.createElement("div");
+      vaultChip.className = "quota-chip vault-chip";
+      vaultChip.title = "Bấm để mở Kho Bùa Qua Môn";
+      vaultChip.textContent = `🎓 Qua môn: ${examCharmItems.length} (∞)`;
+      vaultChip.addEventListener("click", openVaultModal);
+      quotaGrid.appendChild(vaultChip);
 
       document.getElementById("fundraiserHeader").addEventListener("click", () => {
         const isOpen = fundraiserBox.classList.toggle("open");
@@ -1230,7 +1469,7 @@
         const q = searchInput.value.trim().toLowerCase();
         donorListEl.innerHTML = "";
 
-        const filtered = DONORS.filter(d => {
+        const filtered = allSearchableItems.filter(d => {
           const matchText = d.name.toLowerCase().includes(q) || d.id.toLowerCase().includes(q);
           if (!matchText) return false;
           if (activeFilter === "all") return true;
@@ -1257,22 +1496,22 @@
       }
 
       function focusDonor(donorId, openWishCard = false) {
-        const anchor = donorAnchors.find(a => a.donor.id === donorId);
-        if (!anchor) return;
+        const item = allSearchableItems.find(d => d.id === donorId);
+        if (!item) return;
 
         selectedDonorId = donorId;
         btnClearFocus.style.display = "inline-block";
 
-        if (elapsed < T_MSG) {
-          elapsed = T_MSG + 0.5;
+        if (item.type !== "qua_mon") {
+          const anchor = donorAnchors.find(a => a.donor.id === donorId);
+          if (anchor) {
+            if (elapsed < T_MSG) elapsed = T_MSG + 0.5;
+            targetAngle = -Math.PI / 2 - Math.atan2(anchor.z, anchor.x);
+          }
         }
 
-        targetAngle = -Math.PI / 2 - Math.atan2(anchor.z, anchor.x);
         renderDonorList();
-
-        if (openWishCard) {
-          openModalForDonor(anchor.donor);
-        }
+        if (openWishCard) openModalForDonor(item);
       }
 
       function clearFocus() {
@@ -1283,20 +1522,46 @@
       }
       btnClearFocus.addEventListener("click", clearFocus);
 
+      function getCharmImageFile(donor) {
+        if (donor.art) return donor.art;
+        if (donor.type === "qua_mon") return CAMPAIGN.charmDesigns.qua_mon;
+        if (donor.type === "charm") return CAMPAIGN.charmDesigns[donor.color || "gold"];
+        return null;
+      }
+
       function openModalForDonor(donor) {
         const meta = TYPE_META[donor.type] || TYPE_META.light;
         document.getElementById("modalBadge").textContent = `${meta.icon} ${meta.label} • Mã ${donor.id}`;
         document.getElementById("modalOwner").textContent = donor.name;
         document.getElementById("modalWish").textContent = donor.wish || "Chúc mùa Giáng Sinh an lành và ấm áp!";
+        document.getElementById("modalHint").textContent = donor.type === "qua_mon"
+          ? "Lá bùa lưu trong Kho Bùa Qua Môn"
+          : "Vị trí đang phát sáng trên cây";
+
+        const artFrame = document.getElementById("modalArtFrame");
+        const artImg = document.getElementById("modalArtImg");
+        const artFile = getCharmImageFile(donor);
+
+        if (artFile) {
+          artImg.src = artFile;
+          artImg.onerror = () => artFrame.classList.remove("show");
+          artFrame.classList.add("show");
+        } else {
+          artFrame.classList.remove("show");
+          artImg.src = "";
+        }
+
         wishModal.classList.add("visible");
 
         const btnCopy = document.getElementById("btnCopyLink");
         btnCopy.textContent = "🔗 Chép link của tôi";
         btnCopy.onclick = () => {
-          const url = new URL(window.location.href);
-          url.searchParams.set("me", donor.id);
-          navigator.clipboard?.writeText(url.toString());
-          btnCopy.textContent = "✓ Đã sao chép link!";
+          try {
+            const url = new URL(window.location.href);
+            url.searchParams.set("me", donor.id);
+            navigator.clipboard?.writeText(url.toString());
+            btnCopy.textContent = "✓ Đã sao chép link!";
+          } catch (_) {}
         };
       }
 
@@ -1307,16 +1572,91 @@
         if (e.target === wishModal) wishModal.classList.remove("visible");
       });
 
-      renderDonorList();
+      const charmVaultModal = document.getElementById("charmVaultModal");
+      const vaultGrid = document.getElementById("vaultGrid");
+      const vaultSearch = document.getElementById("vaultSearch");
+      const btnLoadMoreVault = document.getElementById("btnLoadMoreVault");
+      let vaultLimit = 36;
 
-      // Tự động mở đúng vị trí nếu truy cập qua link cá nhân hóa (?me=MS01)
-      const initParam = new URLSearchParams(window.location.search).get("me");
-      if (initParam) {
-        const matched = DONORS.find(d => d.id.toLowerCase() === initParam.trim().toLowerCase());
-        if (matched) {
-          setTimeout(() => focusDonor(matched.id, true), 150);
+      function openVaultModal() {
+        document.getElementById("vaultTitle").textContent = `🎓 KHO BÙA QUA MÔN (${examCharmItems.length} LÁ BÙA)`;
+        vaultLimit = 36;
+        renderVaultGrid();
+        charmVaultModal.classList.add("visible");
+      }
+
+      function renderVaultGrid() {
+        const q = vaultSearch.value.trim().toLowerCase();
+        const filtered = examCharmItems.filter(item =>
+          item.name.toLowerCase().includes(q) ||
+          item.id.toLowerCase().includes(q) ||
+          (item.wish || "").toLowerCase().includes(q)
+        );
+
+        vaultGrid.innerHTML = "";
+        if (filtered.length === 0) {
+          vaultGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#8b98b3; padding:24px;">Không tìm thấy lá bùa qua môn phù hợp.</div>`;
+          btnLoadMoreVault.style.display = "none";
+          return;
+        }
+
+        const showCount = Math.min(filtered.length, vaultLimit);
+        for (let i = 0; i < showCount; i++) {
+          const item = filtered[i];
+          const imgFile = getCharmImageFile(item);
+
+          const card = document.createElement("div");
+          card.className = "vault-card";
+          card.innerHTML = `
+            <div class="vault-card-top">
+              <b>[${item.id}]</b>
+              <span>🎓 Bùa Qua Môn</span>
+            </div>
+            ${imgFile ? `<img class="vault-card-thumb" src="${imgFile}" alt="Bùa Qua Môn" loading="lazy" onerror="this.style.display='none'" />` : ""}
+            <div class="vault-card-name">${item.name}</div>
+            <div class="vault-card-wish">${item.wish}</div>
+          `;
+          card.addEventListener("click", () => {
+            charmVaultModal.classList.remove("visible");
+            focusDonor(item.id, true);
+          });
+          vaultGrid.appendChild(card);
+        }
+
+        if (filtered.length > showCount) {
+          btnLoadMoreVault.style.display = "inline-block";
+          btnLoadMoreVault.textContent = `Xem thêm (${filtered.length - showCount} lá bùa còn lại) ▼`;
+        } else {
+          btnLoadMoreVault.style.display = "none";
         }
       }
+
+      document.getElementById("btnOpenVault").addEventListener("click", openVaultModal);
+      document.getElementById("btnOpenVaultSmall").addEventListener("click", openVaultModal);
+      document.getElementById("btnCloseVault").addEventListener("click", () => {
+        charmVaultModal.classList.remove("visible");
+      });
+      charmVaultModal.addEventListener("click", (e) => {
+        if (e.target === charmVaultModal) charmVaultModal.classList.remove("visible");
+      });
+      vaultSearch.addEventListener("input", () => {
+        vaultLimit = 36;
+        renderVaultGrid();
+      });
+      btnLoadMoreVault.addEventListener("click", () => {
+        vaultLimit += 36;
+        renderVaultGrid();
+      });
+
+      renderDonorList();
+
+      try {
+        const initParam = new URLSearchParams(window.location.search).get("me");
+        if (initParam) {
+          const matched = allSearchableItems.find(d => d.id.toLowerCase() === initParam.trim().toLowerCase());
+          if (matched) setTimeout(() => focusDonor(matched.id, true), 150);
+        }
+      } catch (_) {}
 
       // =====================================================================
       // 7. ĐIỀU KHIỂN NHẠC NỀN, KÉO XOAY & CLICK VẬT PHẨM TRÊN CÂY
@@ -1363,6 +1703,7 @@
 
       function findHitDonor(clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return null;
         const px = ((clientX - rect.left) / rect.width) * (COLS * CW);
         const py = ((clientY - rect.top) / rect.height) * (ROWS * CH);
 
@@ -1413,9 +1754,7 @@
       window.addEventListener("pointerup", (e) => {
         if (dragging && !dragMoved) {
           const hit = findHitDonor(e.clientX, e.clientY);
-          if (hit) {
-            focusDonor(hit.id, true);
-          }
+          if (hit) focusDonor(hit.id, true);
         }
         dragging = false;
       });
@@ -1443,7 +1782,7 @@
       document.getElementById("btnSave").onclick = saveScreenshot;
 
       window.addEventListener("keydown", (e) => {
-        if (document.activeElement === searchInput) return;
+        if (document.activeElement === searchInput || document.activeElement === vaultSearch) return;
         if (e.code === "Space") {
           e.preventDefault();
           togglePause();
@@ -1455,6 +1794,7 @@
           toggleMusic();
         } else if (e.key === "Escape") {
           wishModal.classList.remove("visible");
+          charmVaultModal.classList.remove("visible");
         }
       });
 
@@ -1467,7 +1807,7 @@
       const [LX, LY, LZ] = normalize(0.55, 0.72, -0.45);
 
       function render(now) {
-        const dt = Math.min((now - lastTime) / 1000, 0.05);
+        const dt = Math.min(Math.max((now - lastTime) / 1000, 0), 0.05);
         lastTime = now;
 
         if (!paused) {
@@ -1491,7 +1831,6 @@
         const cosA = Math.cos(angle);
         const sinA = Math.sin(angle);
 
-        // 1. Bầu trời sao nhấp nháy
         for (const st of stars) {
           const twinkle = 0.5 + 0.5 * Math.sin(elapsed * st.speed + st.phase);
           if (twinkle > 0.25) {
@@ -1502,7 +1841,6 @@
           }
         }
 
-        // 2. Mặt sàn chấm tròn
         for (const gp of groundPts) {
           const p = project(gp.x, gp.y, gp.z, cosA, sinA);
           if (!p) continue;
@@ -1520,7 +1858,6 @@
           }
         }
 
-        // 3. Chiếu toàn bộ điểm 3D lên lưới ASCII
         for (let i = 0; i < points.length; i++) {
           const pt = points[i];
           const age = elapsed - pt.t0;
@@ -1578,7 +1915,6 @@
           } else if (pt.kind === "CHARM_THREAD") {
             ch = "|";
           } else if (pt.kind === "TINSEL") {
-            // Dây kim tuyến vàng rực khi đạt mốc >= 50%
             const shimmer = 0.88 + 0.32 * Math.sin(elapsed * 4.5 + pt.phase);
             lum = clamp(lum * shimmer + 0.35, 0.3, 1.25);
             ch = shimmer > 1.02 ? "@" : lum > 0.65 ? "#" : "*";
@@ -1611,19 +1947,16 @@
           colorGrid[idx] = `rgb(${r},${g},${b})`;
         }
 
-        // 4. Cập nhật vùng bấm (hit-box) & định vị vật phẩm đang được chọn
         screenHitList = [];
         let selectedScreenPos = null;
 
         if (elapsed >= T_ORNAMENTS[0]) {
-          // Vùng bấm cho từng bóng đèn sáng trong chùm 4 bóng
           for (const bt of bulbTargets) {
             const p = project(bt.x, bt.y, bt.z, cosA, sinA);
             if (p && p.pz < 3.48) {
               screenHitList.push({ donor: bt.donor, x: p.sx * CW, y: p.sy * CH, r: bt.radius });
             }
           }
-          // Vùng bấm & tâm định vị cho toàn bộ vật phẩm
           for (const anc of donorAnchors) {
             const p = project(anc.x, anc.y, anc.z, cosA, sinA);
             if (!p) continue;
@@ -1652,7 +1985,6 @@
           }
         }
 
-        // 5. MỐC 100%: Thắp sáng Ngôi Sao 5 cánh trên đỉnh cây khi đạt 100%
         if (elapsed >= T_STAR) {
           const starProj = project(0, Y1 + 0.14, 0, cosA, sinA);
           if (starProj) {
@@ -1662,7 +1994,6 @@
               const starSize = (2.1 + 1.6 * on) * (1 + 0.05 * Math.sin(elapsed * 5));
               drawStar(charGrid, colorGrid, zBuf, starProj.sx, starProj.sy, starSize, elapsed, flash);
             } else {
-              // Điểm neo mờ trên đỉnh báo hiệu vị trí ngôi sao đang chờ mốc 100%
               const sc = Math.round(starProj.sx);
               const sr = Math.round(starProj.sy);
               if (sc >= 0 && sc < COLS && sr >= 0 && sr < ROWS) {
@@ -1673,7 +2004,6 @@
           }
         }
 
-        // 6. Dòng chữ MERRY CHRISTMAS 2026
         if (elapsed > T_MSG) {
           const msgRow = ROWS - 6;
           const x0 = Math.floor((COLS - CAMPAIGN.message.length) / 2);
@@ -1698,7 +2028,6 @@
           }
         }
 
-        // 7. Vẽ lưới ký tự lên Canvas
         ctx.fillStyle = "#080a10";
         ctx.fillRect(0, 0, COLS * CW, ROWS * CH);
 
@@ -1724,7 +2053,6 @@
           }
         }
 
-        // Nhãn chỉ điểm gọn nhẹ cạnh đúng món đồ của người đang tìm kiếm
         if (selectedScreenPos) {
           const tag = `◄ [${selectedScreenPos.donor.id}] ${selectedScreenPos.donor.name}`;
           const tx = Math.min(COLS * CW - tag.length * 7.5 - 10, (selectedScreenPos.sx + 4) * CW);
@@ -1738,11 +2066,9 @@
           ctx.fillText(tag, tx, ty);
         }
 
-        // 8. Thông số HUD
         ctx.font = `12px Consolas, Menlo, "Courier New", monospace`;
         ctx.fillStyle = "#ffc45a";
-        const timeText = `• tree ${treeStats.percent}%  t ${elapsed.toFixed(1).padStart(4, "0")}s`;
-        ctx.fillText(timeText, (COLS - timeText.length - 2) * CW, 10);
+        ctx.fillText(`• tree ${treeStats.percent}%  t ${elapsed.toFixed(1).padStart(4, "0")}s`, 2 * CW, (ROWS - 5.5) * CH);
 
         const deg = (((angle * 180) / Math.PI) % 360 + 360) % 360;
         ctx.fillStyle = "#b0a8c4";
@@ -1754,7 +2080,7 @@
           (ROWS - 2.9) * CH
         );
         ctx.fillText(
-          `donors ${DONORS.length}/${treeStats.totalSlots}    letters ${letterCount.toLocaleString("en-US")}`,
+          `tree ${DONORS.length}/${treeStats.totalSlots}  qua-mon ${examCharmItems.length}  letters ${letterCount.toLocaleString("en-US")}`,
           2 * CW,
           (ROWS - 1.6) * CH
         );

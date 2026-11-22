@@ -41,17 +41,17 @@
       max-width: 100%;
       max-height: 100%;
       touch-action: none;
+      will-change: contents;
     }
     canvas:active {
       cursor: grabbing;
     }
 
-    /* Wrapper trên desktop giữ nguyên vị trí độc lập 2 góc */
     #topHud {
       display: contents;
     }
 
-    /* LOGO CLB GÓC TRÊN BÊN PHẢI */
+    /* LOGO CLB GÓC TRÊN BÊN PHẢI (CỐ ĐỊNH TỪ MÃ NGUỒN) */
     #clubLogoBox {
       position: fixed;
       top: 12px;
@@ -60,7 +60,7 @@
       display: flex;
       align-items: center;
       gap: 9px;
-      background: rgba(12, 16, 26, 0.86);
+      background: rgba(12, 16, 26, 0.88);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 196, 90, 0.35);
       border-radius: 10px;
@@ -107,7 +107,7 @@
       font-family: inherit;
       font-size: 12px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: background 0.15s ease, border-color 0.15s ease;
     }
     button:hover {
       background: rgba(255, 196, 90, 0.2);
@@ -129,7 +129,7 @@
       z-index: 22;
       width: 322px;
       max-width: calc(100vw - 28px);
-      background: rgba(12, 16, 26, 0.88);
+      background: rgba(12, 16, 26, 0.9);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 196, 90, 0.3);
       border-radius: 10px;
@@ -291,7 +291,6 @@
       border: 1px solid transparent;
       cursor: pointer;
       font-size: 11.5px;
-      transition: all 0.15s;
     }
     .donor-item:hover,
     .donor-item.selected {
@@ -336,8 +335,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      background: rgba(4, 6, 12, 0.65);
-      backdrop-filter: blur(4px);
+      background: rgba(4, 6, 12, 0.72);
       padding: 16px;
     }
     #wishModal.visible {
@@ -355,10 +353,10 @@
       padding: 20px;
       box-shadow: 0 18px 45px rgba(0, 0, 0, 0.78);
       position: relative;
-      animation: popCard 0.22s ease-out;
+      animation: popCard 0.2s ease-out;
     }
     @keyframes popCard {
-      from { transform: scale(0.92); opacity: 0; }
+      from { transform: scale(0.94); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
     .wish-close {
@@ -436,8 +434,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      background: rgba(4, 6, 12, 0.74);
-      backdrop-filter: blur(5px);
+      background: rgba(4, 6, 12, 0.78);
       padding: 14px;
     }
     #charmVaultModal.visible {
@@ -455,7 +452,7 @@
       border-radius: 14px;
       padding: 18px;
       box-shadow: 0 22px 60px rgba(0, 0, 0, 0.85);
-      animation: popCard 0.22s ease-out;
+      animation: popCard 0.2s ease-out;
     }
     .vault-header {
       display: flex;
@@ -505,10 +502,8 @@
       flex-direction: column;
       gap: 6px;
       cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s, background 0.15s;
     }
     .vault-card:hover {
-      transform: translateY(-2px);
       background: rgba(255, 196, 90, 0.12);
       border-color: #ffc45a;
     }
@@ -542,7 +537,6 @@
       overflow: hidden;
     }
 
-    /* Hộp báo lỗi tự động nếu sửa nhầm dấu phẩy trong code */
     #errorBanner {
       display: none;
       position: fixed;
@@ -560,7 +554,7 @@
     }
 
     /* =====================================================================
-       TỐI ƯU GIAO DIỆN ĐIỆN THOẠI (<= 680px)
+       TỐI ƯU GIAO DIỆN & HIỆU NĂNG ĐIỆN THOẠI (<= 680px)
        ===================================================================== */
     @media (max-width: 680px) {
       #topHud {
@@ -575,11 +569,14 @@
         gap: 6px;
         pointer-events: none;
       }
+      /* Tắt backdrop-filter trên mobile để GPU không phải làm mờ canvas 60 lần/giây */
       #fundraiserBox {
         position: static;
         width: 100%;
         max-width: 100%;
         padding: 8px 10px;
+        background: rgba(12, 16, 26, 0.94);
+        backdrop-filter: none;
         pointer-events: auto;
       }
       .campaign-title {
@@ -614,7 +611,7 @@
       }
       #searchInput,
       #vaultSearch {
-        font-size: 16px; /* Ngăn trình duyệt điện thoại tự zoom khi chạm vào ô gõ chữ */
+        font-size: 16px;
         padding: 7px 10px;
       }
       .tab-btn {
@@ -630,12 +627,13 @@
         font-size: 12px;
       }
 
-      /* Logo CLB nằm gọn ngay dưới bảng tiến độ bên góc phải, không đè nút dưới đáy */
       #clubLogoBox {
         position: static;
         padding: 4px 9px;
         gap: 7px;
         border-radius: 8px;
+        background: rgba(12, 16, 26, 0.94);
+        backdrop-filter: none;
         pointer-events: auto;
       }
       #clubLogoImg {
@@ -645,7 +643,6 @@
         font-size: 10.5px;
       }
 
-      /* Hàng nút dưới đáy gọn đúng 1 dòng duy nhất */
       #controls {
         left: 8px;
         right: 8px;
@@ -663,7 +660,6 @@
         border-radius: 7px;
       }
 
-      /* Thiệp điều ước & Kho Bùa Qua Môn trên điện thoại */
       .wish-card {
         padding: 16px;
         max-width: 100%;
@@ -723,7 +719,7 @@
           <div class="filter-tabs">
             <button type="button" class="tab-btn active" data-filter="all">Tất cả</button>
             <button type="button" class="tab-btn" data-filter="qua_mon">🎓 Bùa qua môn</button>
-            <button type="button" class="tab-btn" data-filter="charm">🧧 Thẻ ước</button>
+            <button type="button" class="tab-btn" data-filter="charm">🧧 Bùa cây</button>
             <button type="button" class="tab-btn" data-filter="light">💡 Cụm đèn</button>
             <button type="button" class="tab-btn" data-filter="ornament">🎁 Quà/Châu/Tất</button>
           </div>
@@ -749,7 +745,7 @@
     <div id="wishModal">
       <div class="wish-card">
         <button type="button" class="wish-close" id="btnCloseModal">✕</button>
-        <div class="wish-tag" id="modalBadge">🧧 Thẻ Ước Nguyện</div>
+        <div class="wish-tag" id="modalBadge">🧧 Bùa May Mắn</div>
         <div class="wish-art-frame" id="modalArtFrame">
           <img id="modalArtImg" src="" alt="Mẫu thiết kế bùa" />
         </div>
@@ -822,15 +818,15 @@
           light:    { max: 42, weight: 1.5, icon: "💡", short: "Đèn" },
           bauble:   { max: 30, weight: 2.0, icon: "🔮", short: "Châu" },
           stocking: { max: 20, weight: 2.5, icon: "🧦", short: "Tất" },
-          charm:    { max: 25, weight: 3.0, icon: "🧧", short: "Thẻ ước" },
+          charm:    { max: 25, weight: 3.0, icon: "🧧", short: "Bùa cây" },
           gift:     { max: 20, weight: 4.0, icon: "🎁", short: "Quà" }
         }
       };
 
       // DANH SÁCH GẮN TRỰC TIẾP LÊN CÂY THÔNG (TỐI ĐA 137 SUẤT MS)
       const DONORS = [
-        { id: "MS01", type: "charm",    name: "Hồng Ly",   color: "jade",   wish: "Chúc chiến dịch gây quỹ thành công rực rỡ và lan tỏa thật nhiều yêu thương mùa Giáng Sinh!" },
-        { id: "MS02", type: "light",    name: "Văn Việt",      color: "gold",   wish: "Mong mọi điều bình an, may mắn và hạnh phúc sẽ luôn mỉm cười với tất cả chúng ta." },
+        { id: "MS01", type: "charm",    name: "Minh Suông",   color: "jade",   wish: "Chúc chiến dịch gây quỹ thành công rực rỡ và lan tỏa thật nhiều yêu thương mùa Giáng Sinh!" },
+        { id: "MS02", type: "light",    name: "Hồng Ly",      color: "gold",   wish: "Mong mọi điều bình an, may mắn và hạnh phúc sẽ luôn mỉm cười với tất cả chúng ta." },
         { id: "MS03", type: "gift",     name: "Mạnh Sơn",     color: "red",    wish: "Gửi một hộp quà nhỏ góp sức cùng chương trình. Merry Christmas 2026!" },
         { id: "MS04", type: "stocking", name: "Lớp YK22C",    color: "red",    wish: "Chúc các bạn sinh viên luôn vững tay nghề, ấm áp và tràn đầy nhiệt huyết!" },
         { id: "MS05", type: "bauble",   name: "CLB Hiến Máu", color: "gold",   wish: "Mỗi ngọn đèn sáng lên là một trái tim sẻ chia được kết nối." }
@@ -885,6 +881,7 @@
 
       const examCharmItems = EXAM_CHARMS.map(item => ({ ...item, type: "qua_mon" }));
       const allSearchableItems = [...DONORS, ...examCharmItems];
+      const DONOR_ID_TO_IDX = new Map(DONORS.map((d, i) => [d.id, i]));
 
       function getTreeCompletion() {
         const maxPoints = Object.values(CAMPAIGN.quotas).reduce((sum, q) => sum + q.max * q.weight, 0);
@@ -908,22 +905,23 @@
       }
 
       // =====================================================================
-      // 2. CẤU HÌNH LƯỚI ASCII & KHUNG VẼ AN TOÀN
+      // 2. CẤU HÌNH LƯỚI ASCII & KHUNG VẼ TỐI ƯU GPU
       // =====================================================================
       const canvas = document.getElementById("screen");
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d", { alpha: false });
 
       const COLS = 96;
       const ROWS = 74;
       const CW = 9;
       const CH = 14;
       const FONT_PX = 14;
-      const RAMP = " .:-~=+*x%&#WM";
+      const RAMP_CODES = new Uint8Array([32, 46, 58, 45, 126, 61, 43, 42, 120, 37, 38, 35, 87, 77]); // " .:-~=+*x%&#WM"
+      const RAMP_LEN = RAMP_CODES.length;
       const TAU = Math.PI * 2;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = COLS * CW * dpr;
-      canvas.height = ROWS * CH * dpr;
+      const dpr = isMobileView() ? 1.25 : Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(COLS * CW * dpr);
+      canvas.height = Math.round(ROWS * CH * dpr);
       ctx.scale(dpr, dpr);
 
       function fitCanvas() {
@@ -998,12 +996,12 @@
         bauble:   { icon: "🔮", label: "Quả Châu" },
         gift:     { icon: "🎁", label: "Hộp Quà" },
         stocking: { icon: "🧦", label: "Tất Giáng Sinh" },
-        charm:    { icon: "🧧", label: "Thẻ Ước Nguyện" },
+        charm:    { icon: "🧧", label: "Bùa Treo Cây" },
         qua_mon:  { icon: "🎓", label: "Bùa Qua Môn" }
       };
 
       // =====================================================================
-      // 4. XÂY DỰNG MÔ HÌNH 3D CÂY THÔNG & VẬT PHẨM GÂY QUỸ
+      // 4. XÂY DỰNG MÔ HÌNH 3D DẠNG MẢNG TUYẾN TÍNH (TỐC ĐỘ CAO CHO MOBILE)
       // =====================================================================
       const GROUND = -1.0;
       const Y0 = -0.68;
@@ -1015,6 +1013,14 @@
       const T_STAR = 8.8;
       const T_MSG = 9.6;
 
+      // Mã loại điểm số nguyên để tránh so sánh chuỗi trong vòng lặp render
+      const KIND_STD = 0;
+      const KIND_LIGHT = 1;
+      const KIND_CHARM = 2;
+      const KIND_CHARM_THREAD = 3;
+      const KIND_TINSEL = 4;
+      const KIND_CORE = 5;
+
       function envelope(y) {
         const u = clamp((y - Y0) / (Y1 - Y0), 0, 1);
         return 0.78 * Math.pow(1 - u, 0.82) + 0.03;
@@ -1024,7 +1030,11 @@
         return T_GROW[0] + (T_GROW[1] - T_GROW[0]) * u;
       }
 
-      let points = [];
+      let rawPoints = [];
+      let ptCount = 0;
+      let ptX, ptY, ptZ, ptNx, ptNy, ptNz, ptR, ptG, ptB, ptT0, ptBase, ptPhase, ptCx, ptCy, ptCz;
+      let ptKind, ptFlags, ptDonorIdx;
+
       let groundPts = [];
       let stars = [];
       let donorAnchors = [];
@@ -1033,17 +1043,50 @@
       let litBulbsCount = 0;
 
       function addPoint(x, y, z, nx, ny, nz, col, kind, t0, base = 1.0, phase = 0, cx = x, cy = y, cz = z, pop = false, donorId = null, lit = true) {
-        points.push({
-          x, y, z, nx, ny, nz,
-          r: col[0], g: col[1], b: col[2],
-          kind, t0, base, phase,
-          cx, cy, cz, pop,
-          donorId, lit
-        });
+        const dIdx = donorId && DONOR_ID_TO_IDX.has(donorId) ? DONOR_ID_TO_IDX.get(donorId) : -1;
+        const flags = (pop ? 1 : 0) | (lit ? 2 : 0);
+        rawPoints.push([x, y, z, nx, ny, nz, col[0], col[1], col[2], kind, t0, base, phase, cx, cy, cz, flags, dIdx]);
       }
 
-      function spawnBauble(donor, slotIdx) {
-        const sphere = fibSphere(145);
+      function packPointsToTypedArrays() {
+        ptCount = rawPoints.length;
+        ptX = new Float32Array(ptCount);
+        ptY = new Float32Array(ptCount);
+        ptZ = new Float32Array(ptCount);
+        ptNx = new Float32Array(ptCount);
+        ptNy = new Float32Array(ptCount);
+        ptNz = new Float32Array(ptCount);
+        ptR = new Float32Array(ptCount);
+        ptG = new Float32Array(ptCount);
+        ptB = new Float32Array(ptCount);
+        ptKind = new Uint8Array(ptCount);
+        ptT0 = new Float32Array(ptCount);
+        ptBase = new Float32Array(ptCount);
+        ptPhase = new Float32Array(ptCount);
+        ptCx = new Float32Array(ptCount);
+        ptCy = new Float32Array(ptCount);
+        ptCz = new Float32Array(ptCount);
+        ptFlags = new Uint8Array(ptCount);
+        ptDonorIdx = new Int16Array(ptCount);
+
+        for (let i = 0; i < ptCount; i++) {
+          const p = rawPoints[i];
+          ptX[i] = p[0]; ptY[i] = p[1]; ptZ[i] = p[2];
+          ptNx[i] = p[3]; ptNy[i] = p[4]; ptNz[i] = p[5];
+          ptR[i] = p[6]; ptG[i] = p[7]; ptB[i] = p[8];
+          ptKind[i] = p[9];
+          ptT0[i] = p[10];
+          ptBase[i] = p[11];
+          ptPhase[i] = p[12];
+          ptCx[i] = p[13]; ptCy[i] = p[14]; ptCz[i] = p[15];
+          ptFlags[i] = p[16];
+          ptDonorIdx[i] = p[17];
+        }
+        rawPoints = []; // Giải phóng bộ nhớ tạm
+      }
+
+      function spawnBauble(donor, slotIdx, mobile) {
+        const sphere = fibSphere(mobile ? 85 : 145);
         const u = ((slotIdx * 0.6180339) % 1);
         const y = Y0 + 0.10 + u * (Y1 - Y0 - 0.36);
         const a = slotIdx * 2.39996 + 0.3;
@@ -1056,12 +1099,12 @@
         const t0 = T_ORNAMENTS[0] + (slotIdx % 8) * 0.25;
 
         for (const [sx, sy, sz] of sphere) {
-          addPoint(cx + sx * rad, cy + sy * rad, cz + sz * rad, sx, sy, sz, col, "BALL", t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
+          addPoint(cx + sx * rad, cy + sy * rad, cz + sz * rad, sx, sy, sz, col, KIND_STD, t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
         }
         donorAnchors.push({ donor, x: cx, y: cy, z: cz, radius: 14 });
       }
 
-      function spawnStocking(donor, slotIdx) {
+      function spawnStocking(donor, slotIdx, mobile) {
         const u = (((slotIdx + 0.35) * 0.6180339) % 1);
         const y = Y0 + 0.14 + u * (Y1 - Y0 - 0.42);
         const a = slotIdx * 2.39996 + 1.18;
@@ -1074,31 +1117,35 @@
         const tx = -Math.sin(a), tz = Math.cos(a);
         const rx = Math.cos(a), rz = Math.sin(a);
         const bodyCol = resolveColor(donor.color, PALETTE_MAP.red);
+        const scale = mobile ? 0.65 : 1.0;
 
-        for (let i = 0; i < 65; i++) {
-          const ang = (i / 65) * TAU * 3;
-          const dy = (i / 65) * 0.028;
+        const nCuff = Math.round(65 * scale);
+        for (let i = 0; i < nCuff; i++) {
+          const ang = (i / nCuff) * TAU * 3;
+          const dy = (i / nCuff) * 0.028;
           const lx = Math.cos(ang) * 0.036, lz = Math.sin(ang) * 0.036;
-          addPoint(cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz, rx * Math.cos(ang) + tx * Math.sin(ang), 0.3, rz * Math.cos(ang) + tz * Math.sin(ang), PALETTE_MAP.white, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
+          addPoint(cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz, rx * Math.cos(ang) + tx * Math.sin(ang), 0.3, rz * Math.cos(ang) + tz * Math.sin(ang), PALETTE_MAP.white, KIND_STD, t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
         }
-        for (let i = 0; i < 95; i++) {
-          const ang = (i / 95) * TAU * 5;
-          const dy = -(i / 95) * 0.095;
+        const nLeg = Math.round(95 * scale);
+        for (let i = 0; i < nLeg; i++) {
+          const ang = (i / nLeg) * TAU * 5;
+          const dy = -(i / nLeg) * 0.095;
           const lx = Math.cos(ang) * 0.031, lz = Math.sin(ang) * 0.031;
-          addPoint(cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz, rx * Math.cos(ang) + tx * Math.sin(ang), 0.1, rz * Math.cos(ang) + tz * Math.sin(ang), bodyCol, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
+          addPoint(cx + rx * lx + tx * lz, cy + dy, cz + rz * lx + tz * lz, rx * Math.cos(ang) + tx * Math.sin(ang), 0.1, rz * Math.cos(ang) + tz * Math.sin(ang), bodyCol, KIND_STD, t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
         }
-        for (let i = 0; i < 75; i++) {
-          const ang = (i / 75) * TAU * 4;
-          const footShift = (i / 75) * 0.068;
-          const rad = 0.028 * (1 - 0.25 * (i / 75));
+        const nFoot = Math.round(75 * scale);
+        for (let i = 0; i < nFoot; i++) {
+          const ang = (i / nFoot) * TAU * 4;
+          const footShift = (i / nFoot) * 0.068;
+          const rad = 0.028 * (1 - 0.25 * (i / nFoot));
           const lx = Math.cos(ang) * rad, dy = -0.095 + Math.sin(ang) * rad;
-          addPoint(cx + rx * lx + tx * footShift, cy + dy, cz + rz * lx + tz * footShift, rx * Math.cos(ang), Math.sin(ang), rz * Math.cos(ang), bodyCol, "STOCKING", t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
+          addPoint(cx + rx * lx + tx * footShift, cy + dy, cz + rz * lx + tz * footShift, rx * Math.cos(ang), Math.sin(ang), rz * Math.cos(ang), bodyCol, KIND_STD, t0, 1.0, 0, cx, cy, cz, true, donor.id, true);
         }
 
         donorAnchors.push({ donor, x: cx, y: cy - 0.04, z: cz, radius: 14 });
       }
 
-      function spawnCharm(donor, slotIdx) {
+      function spawnCharm(donor, slotIdx, mobile) {
         const u = (((slotIdx + 0.7) * 0.6180339) % 1);
         const y = Y0 + 0.18 + u * (Y1 - Y0 - 0.44);
         const a = slotIdx * 2.39996 + 2.25;
@@ -1114,14 +1161,14 @@
         const coreCol = resolveColor(donor.color, PALETTE_MAP.jade);
 
         for (let s = 1; s <= 5; s++) {
-          addPoint(cx, cy + 0.048 + s * 0.008, cz, rx, 0.2, rz, PALETTE_MAP.gold, "CHARM_THREAD", t0, 0.9, phase, cx, cy, cz, false, donor.id, true);
+          addPoint(cx, cy + 0.048 + s * 0.008, cz, rx, 0.2, rz, PALETTE_MAP.gold, KIND_CHARM_THREAD, t0, 0.9, phase, cx, cy, cz, false, donor.id, true);
         }
 
-        const rows = 11;
+        const rows = mobile ? 8 : 11;
         for (let iy = -rows; iy <= rows; iy++) {
           const nyNorm = iy / rows;
           const halfW = (1 - Math.abs(nyNorm) * 0.78) * 0.044;
-          const cols = Math.max(1, Math.round(halfW / 0.007));
+          const cols = Math.max(1, Math.round(halfW / (mobile ? 0.009 : 0.007)));
           for (let ix = -cols; ix <= cols; ix++) {
             const lx = (ix / Math.max(1, cols)) * halfW;
             const ly = nyNorm * 0.052;
@@ -1130,7 +1177,7 @@
             const col = isBorder ? PALETTE_MAP.gold : (isCenter ? PALETTE_MAP.white : coreCol);
 
             for (const side of [-0.008, 0.008]) {
-              addPoint(cx + tx * lx + rx * side, cy + ly, cz + tz * lx + rz * side, rx * Math.sign(side), 0.15, rz * Math.sign(side), col, "CHARM", t0, 1.05, phase, cx, cy, cz, true, donor.id, true);
+              addPoint(cx + tx * lx + rx * side, cy + ly, cz + tz * lx + rz * side, rx * Math.sign(side), 0.15, rz * Math.sign(side), col, KIND_CHARM, t0, 1.05, phase, cx, cy, cz, true, donor.id, true);
             }
           }
         }
@@ -1138,7 +1185,7 @@
         donorAnchors.push({ donor, x: cx, y: cy, z: cz, radius: 16 });
       }
 
-      function spawnGift(donor, slotIdx) {
+      function spawnGift(donor, slotIdx, mobile) {
         const isOuter = slotIdx >= 8;
         const ringIdx = isOuter ? slotIdx - 8 : slotIdx;
         const ringCap = isOuter ? 12 : 8;
@@ -1156,7 +1203,7 @@
 
         const bodyCol = resolveColor(donor.color, PALETTE_MAP.red);
         const ribCol = donor.color === "gold" ? PALETTE_MAP.red : PALETTE_MAP.gold;
-        const ptsOnBox = 950;
+        const ptsOnBox = mobile ? 440 : 950;
 
         for (let i = 0; i < ptsOnBox; i++) {
           const face = Math.floor(rand() * 5);
@@ -1184,38 +1231,41 @@
           const wx = gx + lx * cosR - lz * sinR;
           const wy = GROUND + ly;
           const wz = gz + lx * sinR + lz * cosR;
-          addPoint(wx, wy, wz, nx * cosR - nz * sinR, ny, nx * sinR + nz * cosR, isRib ? ribCol : bodyCol, "GIFT", t0, 0.95, 0, gx, GROUND + h * 0.5, gz, true, donor.id, true);
+          addPoint(wx, wy, wz, nx * cosR - nz * sinR, ny, nx * sinR + nz * cosR, isRib ? ribCol : bodyCol, KIND_STD, t0, 0.95, 0, gx, GROUND + h * 0.5, gz, true, donor.id, true);
         }
 
-        const bowSphere = fibSphere(48);
+        const bowSphere = fibSphere(mobile ? 28 : 48);
         for (const [bx, by, bz] of bowSphere) {
-          addPoint(gx + bx * 0.055, GROUND + h + 0.022 + by * 0.03, gz + bz * 0.055, bx, by, bz, ribCol, "GIFT", t0 + 0.1, 1.0, 0, gx, GROUND + h, gz, true, donor.id, true);
+          addPoint(gx + bx * 0.055, GROUND + h + 0.022 + by * 0.03, gz + bz * 0.055, bx, by, bz, ribCol, KIND_STD, t0 + 0.1, 1.0, 0, gx, GROUND + h, gz, true, donor.id, true);
         }
 
         donorAnchors.push({ donor, x: gx, y: GROUND + h * 0.55, z: gz, radius: 18 });
       }
 
       function buildScene() {
+        const mobile = isMobileView();
         seed = 7;
-        points = [];
+        rawPoints = [];
         groundPts = [];
         stars = [];
         donorAnchors = [];
         bulbTargets = [];
         const tips = [];
 
-        for (let i = 0; i < 240; i++) {
+        const starCount = mobile ? 140 : 240;
+        for (let i = 0; i < starCount; i++) {
           stars.push({
             col: Math.floor(rand() * COLS),
             row: Math.floor(rand() * (ROWS - 12)),
-            ch: rand() < 0.28 ? "+" : rand() < 0.62 ? "*" : ".",
+            chCode: rand() < 0.28 ? 43 : rand() < 0.62 ? 42 : 46, // '+', '*', '.'
             phase: rand() * TAU,
             speed: uniform(1.5, 4.0)
           });
         }
 
-        for (let gx = -2.4; gx <= 2.4; gx += 0.16) {
-          for (let gz = -2.4; gz <= 2.4; gz += 0.16) {
+        const groundStep = mobile ? 0.22 : 0.16;
+        for (let gx = -2.4; gx <= 2.4; gx += groundStep) {
+          for (let gz = -2.4; gz <= 2.4; gz += groundStep) {
             const dist = Math.hypot(gx, gz);
             if (dist <= 2.45) {
               groundPts.push({ x: gx, y: GROUND, z: gz, dist });
@@ -1224,6 +1274,7 @@
         }
 
         const whorls = 24;
+        const needleScale = mobile ? 0.52 : 1.0;
         for (let i = 0; i < whorls; i++) {
           const y = Y0 + 0.02 + ((Y1 - 0.06 - (Y0 + 0.02)) * i) / (whorls - 1);
           const u = (y - Y0) / (Y1 - Y0);
@@ -1233,7 +1284,7 @@
           for (let b = 0; b < nb; b++) {
             const a = (TAU * (b + 0.5 * rand())) / nb + i * 0.77;
             const L = R * uniform(0.85, 1.08);
-            const n = Math.floor(25 + 270 * L);
+            const n = Math.floor((25 + 270 * L) * needleScale);
             const dx = Math.cos(a), dz = Math.sin(a);
             const sx = -Math.sin(a), sz = Math.cos(a);
 
@@ -1258,7 +1309,7 @@
                 ? PALETTE_MAP.white
                 : [0.09 + 0.12 * rand(), 0.46 + 0.36 * rand(), 0.16 + 0.14 * rand()];
 
-              addPoint(px, py, pz, nx, ny, nz, col, isSnow ? "SNOW" : "NEEDLE", growTime(y) + 0.45 * s, isSnow ? 1.0 : ao);
+              addPoint(px, py, pz, nx, ny, nz, col, KIND_STD, growTime(y) + 0.45 * s, isSnow ? 1.0 : ao);
             }
 
             const tl = 0.93 * L;
@@ -1266,24 +1317,27 @@
           }
         }
 
-        for (let i = 0; i < 6000; i++) {
+        const coreCount = mobile ? 2200 : 6000;
+        for (let i = 0; i < coreCount; i++) {
           const y = Y0 + (Y1 - 0.1 - Y0) * rand();
           const phi = rand() * TAU;
           const r = 0.60 * envelope(y);
           const [nx, ny, nz] = normalize(Math.cos(phi), 0.3, Math.sin(phi));
-          addPoint(Math.cos(phi) * r, y, Math.sin(phi) * r, nx, ny, nz, [0.03, 0.14, 0.06], "CORE", growTime(y) + 0.2, 0.45);
+          addPoint(Math.cos(phi) * r, y, Math.sin(phi) * r, nx, ny, nz, [0.03, 0.14, 0.06], KIND_CORE, growTime(y) + 0.2, 0.45);
         }
 
-        for (let i = 0; i < 1500; i++) {
+        const trunkCount = mobile ? 650 : 1500;
+        for (let i = 0; i < trunkCount; i++) {
           const y = GROUND + rand() * (Y0 + 0.1 - GROUND);
           const phi = rand() * TAU;
           const nx = Math.cos(phi), nz = Math.sin(phi);
           const bark = 0.75 + 0.25 * Math.sign(Math.sin(phi * 30 + y * 5));
-          addPoint(nx * 0.085, y, nz * 0.085, nx, 0, nz, TRUNK_COL, "TRUNK", growTime(y), bark);
+          addPoint(nx * 0.085, y, nz * 0.085, nx, 0, nz, TRUNK_COL, KIND_STD, growTime(y), bark);
         }
 
         if (HAS_TINSEL) {
-          const garlandSteps = 2000;
+          const garlandSteps = mobile ? 950 : 2000;
+          const garlandSub = mobile ? 2 : 4;
           const turns = 3.6;
           for (let i = 0; i < garlandSteps; i++) {
             const u = i / (garlandSteps - 1);
@@ -1292,9 +1346,9 @@
             const swag = -0.07 * Math.abs(Math.sin(ag * 2.5));
             const rg = envelope(yg) + 0.07;
 
-            for (let j = 0; j < 4; j++) {
+            for (let j = 0; j < garlandSub; j++) {
               const [nx, ny, nz] = normalize(Math.cos(ag) + 0.4 * gauss(), 0.3 + 0.4 * gauss(), Math.sin(ag) + 0.4 * gauss());
-              addPoint(Math.cos(ag) * rg + 0.016 * gauss(), yg + swag + 0.016 * gauss(), Math.sin(ag) * rg + 0.016 * gauss(), nx, ny, nz, PALETTE_MAP.gold, "TINSEL", T_GARLAND[0] + u * (T_GARLAND[1] - T_GARLAND[0]), 0.98, rand() * TAU);
+              addPoint(Math.cos(ag) * rg + 0.016 * gauss(), yg + swag + 0.016 * gauss(), Math.sin(ag) * rg + 0.016 * gauss(), nx, ny, nz, PALETTE_MAP.gold, KIND_TINSEL, T_GARLAND[0] + u * (T_GARLAND[1] - T_GARLAND[0]), 0.98, rand() * TAU);
             }
           }
         }
@@ -1305,10 +1359,10 @@
         const stockingDonors = DONORS.filter(d => d.type === "stocking");
         const charmDonors = DONORS.filter(d => d.type === "charm");
 
-        baubleDonors.forEach((d, idx) => spawnBauble(d, idx));
-        giftDonors.forEach((d, idx) => spawnGift(d, idx));
-        stockingDonors.forEach((d, idx) => spawnStocking(d, idx));
-        charmDonors.forEach((d, idx) => spawnCharm(d, idx));
+        baubleDonors.forEach((d, idx) => spawnBauble(d, idx, mobile));
+        giftDonors.forEach((d, idx) => spawnGift(d, idx, mobile));
+        stockingDonors.forEach((d, idx) => spawnStocking(d, idx, mobile));
+        charmDonors.forEach((d, idx) => spawnCharm(d, idx, mobile));
 
         for (let i = tips.length - 1; i > 0; i--) {
           const j = Math.floor(rand() * (i + 1));
@@ -1344,7 +1398,7 @@
         totalBulbs = clusters.reduce((sum, g) => sum + g.length, 0);
         litBulbsCount = 0;
 
-        const bulb = fibSphere(14);
+        const bulb = fibSphere(mobile ? 10 : 14);
         clusters.forEach((clusterTips, clusterIdx) => {
           const owner = clusterIdx < lightDonors.length ? lightDonors[clusterIdx] : null;
           const isLit = Boolean(owner);
@@ -1363,7 +1417,7 @@
 
             const phase = rand() * TAU;
             for (const [bx, by, bz] of bulb) {
-              addPoint(cx + bx * 0.029, cy + by * 0.029, cz + bz * 0.029, bx, by, bz, col, "LIGHT", t0, isLit ? 1.0 : 0.28, phase, cx, cy, cz, isLit, owner ? owner.id : null, isLit);
+              addPoint(cx + bx * 0.029, cy + by * 0.029, cz + bz * 0.029, bx, by, bz, col, KIND_LIGHT, t0, isLit ? 1.0 : 0.28, phase, cx, cy, cz, isLit, owner ? owner.id : null, isLit);
             }
           }
 
@@ -1377,6 +1431,8 @@
             });
           }
         });
+
+        packPointsToTypedArrays();
       }
 
       buildScene();
@@ -1388,11 +1444,7 @@
       const cosP = Math.cos(0.15);
       const aspect = CH / CW;
 
-      function project(x, y, z, cosA, sinA) {
-        const isPortrait = window.innerHeight > window.innerWidth;
-        const activeCamZ = isPortrait ? 3.08 : 3.25;
-        const activeFov = isPortrait ? 2.12 : 1.92;
-
+      function project(x, y, z, cosA, sinA, activeCamZ, activeFov) {
         const rx = x * cosA - z * sinA;
         const rz = x * sinA + z * cosA;
         const cy = y + 0.34;
@@ -1440,9 +1492,12 @@
               const idx = row * COLS + col;
               if (zBuf[idx] > 0.12) {
                 zBuf[idx] = 0.12;
-                charGrid[idx] = fade > 0.55 ? "*" : "+";
+                charGrid[idx] = fade > 0.55 ? 42 : 43; // '*' : '+'
                 const lum = clamp(fade * boost, 0.35, 1.35);
-                colorGrid[idx] = `rgb(${Math.min(255, Math.round(tintR * 255 * lum))},${Math.min(255, Math.round(tintG * 255 * lum))},${Math.min(255, Math.round(tintB * 255 * lum))})`;
+                const cr = Math.min(255, (tintR * 255 * lum) | 0);
+                const cg = Math.min(255, (tintG * 255 * lum) | 0);
+                const cb = Math.min(255, (tintB * 255 * lum) | 0);
+                colorGrid[idx] = (cr << 16) | (cg << 8) | cb;
               }
             }
           }
@@ -1473,13 +1528,16 @@
             zBuf[idx] = 0.08;
 
             const distNorm = Math.hypot(dx / stretchX, dy) / Math.max(R, 0.01);
-            const ch = distNorm < 0.34 ? "@" : distNorm < 0.68 ? "#" : "*";
-            charGrid[idx] = ch;
-            if (ch === "@") {
-              colorGrid[idx] = "rgb(255, 253, 220)";
+            const chCode = distNorm < 0.34 ? 64 : distNorm < 0.68 ? 35 : 42; // '@', '#', '*'
+            charGrid[idx] = chCode;
+            if (chCode === 64) {
+              colorGrid[idx] = (255 << 16) | (253 << 8) | 220;
             } else {
               const lum = clamp((1.12 - 0.25 * distNorm) * (1 + 0.45 * flash), 0.7, 1.35);
-              colorGrid[idx] = `rgb(${Math.min(255, Math.round(tintR * 255 * lum))},${Math.min(255, Math.round(tintG * 255 * lum))},${Math.min(255, Math.round(tintB * 255 * lum))})`;
+              const cr = Math.min(255, (tintR * 255 * lum) | 0);
+              const cg = Math.min(255, (tintG * 255 * lum) | 0);
+              const cb = Math.min(255, (tintB * 255 * lum) | 0);
+              colorGrid[idx] = (cr << 16) | (cg << 8) | cb;
             }
           }
         }
@@ -1491,8 +1549,11 @@
       let elapsed = 0;
       let angle = 0;
       let targetAngle = null;
+      let dragVelocity = 0;
       let selectedDonorId = null;
-      let hoveredDonor = null;
+      let selectedDonorIdx = -1;
+      let hoveredDonorId = null;
+      let hoveredDonorIdx = -1;
       let screenHitList = [];
 
       const fundraiserBox = document.getElementById("fundraiserBox");
@@ -1595,6 +1656,8 @@
         if (!item) return;
 
         selectedDonorId = donorId;
+        selectedDonorIdx = DONOR_ID_TO_IDX.has(donorId) ? DONOR_ID_TO_IDX.get(donorId) : -1;
+        dragVelocity = 0;
         btnClearFocus.style.display = "inline-block";
 
         if (item.type !== "qua_mon") {
@@ -1611,6 +1674,7 @@
 
       function clearFocus() {
         selectedDonorId = null;
+        selectedDonorIdx = -1;
         targetAngle = null;
         btnClearFocus.style.display = "none";
         renderDonorList();
@@ -1755,7 +1819,7 @@
       } catch (_) {}
 
       // =====================================================================
-      // 7. ĐIỀU KHIỂN NHẠC NỀN, KÉO XOAY & CLICK VẬT PHẨM TRÊN CÂY
+      // 7. ĐIỀU KHIỂN NHẠC NỀN, VUỐT XOAY CÓ QUÁN TÍNH & CLICK VẬT PHẨM
       // =====================================================================
       const bgMusic = document.getElementById("bgMusic");
       const btnMusic = document.getElementById("btnMusic");
@@ -1822,6 +1886,7 @@
       let dragging = false;
       let dragMoved = false;
       let lastMouseX = 0;
+      let lastMoveTime = 0;
       let lastTime = performance.now();
 
       function findHitDonor(clientX, clientY) {
@@ -1847,15 +1912,23 @@
         dragging = true;
         dragMoved = false;
         targetAngle = null;
+        dragVelocity = 0;
         lastMouseX = e.clientX;
+        lastMoveTime = performance.now();
       });
 
       window.addEventListener("pointermove", (e) => {
         if (dragging) {
+          const now = performance.now();
           const dx = e.clientX - lastMouseX;
           if (Math.abs(dx) > 3) dragMoved = true;
+          const sens = e.pointerType === "touch" ? 0.017 : 0.011;
+          const dAng = dx * sens;
+          angle += dAng;
+          const dtMove = Math.max((now - lastMoveTime) / 1000, 0.008);
+          dragVelocity = clamp(dAng / dtMove, -12, 12);
           lastMouseX = e.clientX;
-          angle += dx * 0.011;
+          lastMoveTime = now;
           hoverTip.style.display = "none";
           return;
         }
@@ -1863,7 +1936,9 @@
         if (e.pointerType === "touch") return;
 
         const hit = findHitDonor(e.clientX, e.clientY);
-        hoveredDonor = hit;
+        hoveredDonorId = hit ? hit.id : null;
+        hoveredDonorIdx = hit && DONOR_ID_TO_IDX.has(hit.id) ? DONOR_ID_TO_IDX.get(hit.id) : -1;
+
         if (hit) {
           const meta = TYPE_META[hit.type] || TYPE_META.light;
           canvas.style.cursor = "pointer";
@@ -1878,9 +1953,14 @@
       });
 
       window.addEventListener("pointerup", (e) => {
-        if (dragging && !dragMoved) {
-          const hit = findHitDonor(e.clientX, e.clientY);
-          if (hit) focusDonor(hit.id, true);
+        if (dragging) {
+          if (!dragMoved) {
+            dragVelocity = 0;
+            const hit = findHitDonor(e.clientX, e.clientY);
+            if (hit) focusDonor(hit.id, true);
+          } else if (performance.now() - lastMoveTime > 90) {
+            dragVelocity = 0;
+          }
         }
         dragging = false;
       });
@@ -1892,6 +1972,7 @@
       function restartScene() {
         elapsed = 0;
         angle = 0;
+        dragVelocity = 0;
         clearFocus();
         paused = false;
         updateControlLabels();
@@ -1925,16 +2006,36 @@
       });
 
       // =====================================================================
-      // 8. VÒNG LẶP RENDER CHÍNH
+      // 8. VÒNG LẶP RENDER TỐI ƯU KHÔNG CẤP PHÁT BỘ NHỚ RÁC (ZERO-GC)
       // =====================================================================
       const zBuf = new Float32Array(COLS * ROWS);
-      const charGrid = new Array(COLS * ROWS);
-      const colorGrid = new Array(COLS * ROWS);
+      const charGrid = new Uint8Array(COLS * ROWS);
+      const colorGrid = new Uint32Array(COLS * ROWS);
       const [LX, LY, LZ] = normalize(0.55, 0.72, -0.45);
 
+      const charStrCache = new Array(256);
+      for (let c = 0; c < 256; c++) charStrCache[c] = String.fromCharCode(c);
+      const colorStrCache = new Map();
+
+      function getColorCss(packed) {
+        let css = colorStrCache.get(packed);
+        if (!css) {
+          if (colorStrCache.size > 2048) colorStrCache.clear();
+          css = `rgb(${(packed >> 16) & 255},${(packed >> 8) & 255},${packed & 255})`;
+          colorStrCache.set(packed, css);
+        }
+        return css;
+      }
+
       function render(now) {
-        const dt = Math.min(Math.max((now - lastTime) / 1000, 0), 0.05);
+        const dt = Math.min(Math.max((now - lastTime) / 1000, 0), 0.12);
         lastTime = now;
+
+        const mob = isMobileView();
+        const isPortrait = window.innerHeight > window.innerWidth;
+        const activeCamZ = isPortrait ? 3.08 : 3.25;
+        const activeFov = isPortrait ? 2.12 : 1.92;
+        const autoSpeed = mob ? 0.52 : 0.40;
 
         if (!paused) {
           elapsed += dt;
@@ -1943,148 +2044,184 @@
               let diff = (targetAngle - angle) % TAU;
               if (diff > Math.PI) diff -= TAU;
               if (diff < -Math.PI) diff += TAU;
-              angle += diff * Math.min(1, dt * 5.5);
+              angle += diff * Math.min(1, dt * 6.5);
+            } else if (Math.abs(dragVelocity) > 0.03) {
+              angle = (angle + dragVelocity * dt) % TAU;
+              dragVelocity *= Math.pow(0.035, dt);
             } else if (!selectedDonorId) {
-              angle = (angle + dt * 0.36) % TAU;
+              dragVelocity = 0;
+              angle = (angle + dt * autoSpeed) % TAU;
             }
           }
         }
 
         zBuf.fill(999);
-        charGrid.fill("");
-        colorGrid.fill("");
+        charGrid.fill(0);
+        colorGrid.fill(0);
 
         const cosA = Math.cos(angle);
         const sinA = Math.sin(angle);
+        const halfCols = COLS * 0.5;
+        const halfRows = ROWS * 0.5;
+        const projScaleX = activeFov * halfRows * aspect;
+        const projScaleY = activeFov * halfRows;
 
-        for (const st of stars) {
+        for (let i = 0; i < stars.length; i++) {
+          const st = stars[i];
           const twinkle = 0.5 + 0.5 * Math.sin(elapsed * st.speed + st.phase);
           if (twinkle > 0.25) {
             const idx = st.row * COLS + st.col;
-            charGrid[idx] = twinkle > 0.82 ? st.ch : ".";
-            const b = Math.round(95 + 135 * twinkle);
-            colorGrid[idx] = `rgb(${b},${b + 10},${Math.min(255, b + 35)})`;
+            charGrid[idx] = twinkle > 0.82 ? st.chCode : 46;
+            const b = (95 + 135 * twinkle) | 0;
+            colorGrid[idx] = (b << 16) | ((b + 10) << 8) | Math.min(255, b + 35);
           }
         }
 
-        for (const gp of groundPts) {
-          const p = project(gp.x, gp.y, gp.z, cosA, sinA);
-          if (!p) continue;
-          const col = Math.round(p.sx);
-          const row = Math.round(p.sy);
+        for (let i = 0; i < groundPts.length; i++) {
+          const gp = groundPts[i];
+          const rx = gp.x * cosA - gp.z * sinA;
+          const rz = gp.x * sinA + gp.z * cosA;
+          const cy = gp.y + 0.34;
+          const cz = rz + activeCamZ;
+          const pz = cy * sinP + cz * cosP;
+          if (pz <= 0.25) continue;
+
+          const py = cy * cosP - cz * sinP;
+          const col = Math.round(halfCols + (rx / pz) * projScaleX);
+          const row = Math.round(halfRows - (py / pz) * projScaleY);
+
           if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
             const idx = row * COLS + col;
-            if (p.pz < zBuf[idx]) {
-              zBuf[idx] = p.pz;
-              charGrid[idx] = ".";
+            if (pz < zBuf[idx]) {
+              zBuf[idx] = pz;
+              charGrid[idx] = 46; // '.'
               const radialFade = clamp(1.15 - gp.dist / 2.5, 0.25, 1.0);
-              const shade = Math.round(clamp((145 - p.pz * 20) * radialFade, 38, 115));
-              colorGrid[idx] = `rgb(${shade},${shade + 8},${shade + 22})`;
+              const shade = clamp((145 - pz * 20) * radialFade, 38, 115) | 0;
+              colorGrid[idx] = (shade << 16) | ((shade + 8) << 8) | (shade + 22);
             }
           }
         }
 
-        for (let i = 0; i < points.length; i++) {
-          const pt = points[i];
-          const age = elapsed - pt.t0;
+        const charmSway = Math.sin(elapsed * 2.4) * 0.011;
+        const focusPulse = 0.58 + 0.35 * Math.sin(elapsed * 7.5);
+        const hasSelection = selectedDonorIdx >= 0;
+
+        for (let i = 0; i < ptCount; i++) {
+          const age = elapsed - ptT0[i];
           if (age < 0) continue;
 
-          let px = pt.x, py = pt.y, pz = pt.z;
-          if (pt.pop && age < 0.35) {
+          let px = ptX[i], py = ptY[i], pz = ptZ[i];
+          const flags = ptFlags[i];
+          const isPop = (flags & 1) !== 0;
+          const isLit = (flags & 2) !== 0;
+          const kind = ptKind[i];
+
+          if (isPop && age < 0.35) {
             const s = smoothstep(age / 0.35);
-            px = pt.cx + (pt.x - pt.cx) * s;
-            py = pt.cy + (pt.y - pt.cy) * s;
-            pz = pt.cz + (pt.z - pt.cz) * s;
+            px = ptCx[i] + (px - ptCx[i]) * s;
+            py = ptCy[i] + (py - ptCy[i]) * s;
+            pz = ptCz[i] + (pz - ptCz[i]) * s;
           }
 
-          if (pt.kind === "CHARM") {
-            px += Math.sin(elapsed * 2.4 + pt.phase) * 0.011;
+          if (kind === KIND_CHARM) {
+            px += charmSway;
           }
 
-          const proj = project(px, py, pz, cosA, sinA);
-          if (!proj) continue;
+          const rx = px * cosA - pz * sinA;
+          const rz = px * sinA + pz * cosA;
+          const cy = py + 0.34;
+          const cz = rz + activeCamZ;
+          const projPz = cy * sinP + cz * cosP;
+          if (projPz <= 0.25) continue;
 
-          const col = Math.round(proj.sx);
-          const row = Math.round(proj.sy);
+          const projPy = cy * cosP - cz * sinP;
+          const col = Math.round(halfCols + (rx / projPz) * projScaleX);
+          const row = Math.round(halfRows - (projPy / projPz) * projScaleY);
           if (col < 0 || col >= COLS || row < 0 || row >= ROWS) continue;
 
           const idx = row * COLS + col;
-          if (proj.pz >= zBuf[idx]) continue;
+          if (projPz >= zBuf[idx]) continue;
 
-          zBuf[idx] = proj.pz;
+          zBuf[idx] = projPz;
 
-          const rnx = pt.nx * cosA - pt.nz * sinA;
-          const rnz = pt.nx * sinA + pt.nz * cosA;
-          const diff = Math.max(0, rnx * LX + pt.ny * LY + rnz * LZ);
+          const nx = ptNx[i], ny = ptNy[i], nz = ptNz[i];
+          const rnx = nx * cosA - nz * sinA;
+          const rnz = nx * sinA + nz * cosA;
+          const diff = Math.max(0, rnx * LX + ny * LY + rnz * LZ);
 
-          let lum = pt.base * (0.28 + 0.82 * diff);
-          let ch = RAMP[Math.min(RAMP.length - 1, Math.floor(clamp(lum, 0, 0.999) * RAMP.length))];
+          let lum = ptBase[i] * (0.28 + 0.82 * diff);
+          const rampIdx = Math.min(RAMP_LEN - 1, (clamp(lum, 0, 0.999) * RAMP_LEN) | 0);
+          let chCode = RAMP_CODES[rampIdx];
 
           let spawnFlash = 0;
-          if (pt.lit && age < 0.32) {
+          if (isLit && age < 0.32) {
             spawnFlash = 1 - age / 0.32;
           }
 
-          if (pt.kind === "LIGHT") {
-            if (!pt.lit) {
-              ch = "·";
+          if (kind === KIND_LIGHT) {
+            if (!isLit) {
+              chCode = 183; // '·'
               lum = 0.16;
             } else {
-              const pulse = 0.65 + 0.35 * Math.sin(elapsed * 5.0 + pt.phase);
+              const pulse = 0.65 + 0.35 * Math.sin(elapsed * 5.0 + ptPhase[i]);
               lum = 0.84 + 0.35 * pulse;
-              ch = pulse > 0.72 ? "@" : "o";
+              chCode = pulse > 0.72 ? 64 : 111; // '@' : 'o'
             }
-          } else if (pt.kind === "CHARM") {
-            const shimmer = 0.78 + 0.32 * Math.sin(elapsed * 4.5 + pt.phase);
+          } else if (kind === KIND_CHARM) {
+            const shimmer = 0.78 + 0.32 * Math.sin(elapsed * 4.5 + ptPhase[i]);
             lum = clamp(lum * shimmer + 0.3, 0.4, 1.2);
-            ch = shimmer > 0.95 ? "@" : "#";
-          } else if (pt.kind === "CHARM_THREAD") {
-            ch = "|";
-          } else if (pt.kind === "TINSEL") {
-            const shimmer = 0.88 + 0.32 * Math.sin(elapsed * 4.5 + pt.phase);
+            chCode = shimmer > 0.95 ? 64 : 35; // '@' : '#'
+          } else if (kind === KIND_CHARM_THREAD) {
+            chCode = 124; // '|'
+          } else if (kind === KIND_TINSEL) {
+            const shimmer = 0.88 + 0.32 * Math.sin(elapsed * 4.5 + ptPhase[i]);
             lum = clamp(lum * shimmer + 0.35, 0.3, 1.25);
-            ch = shimmer > 1.02 ? "@" : lum > 0.65 ? "#" : "*";
-          } else if (pt.kind === "CORE") {
-            ch = spawnFlash > 0.35 ? "=" : ".";
+            chCode = shimmer > 1.02 ? 64 : lum > 0.65 ? 35 : 42; // '@', '#', '*'
+          } else if (kind === KIND_CORE) {
+            chCode = spawnFlash > 0.35 ? 61 : 46; // '=' : '.'
           }
 
-          const isSelected = selectedDonorId && pt.donorId === selectedDonorId;
-          const isHovered = hoveredDonor && pt.donorId === hoveredDonor.id;
+          const dIdx = ptDonorIdx[i];
+          const isSelected = hasSelection && dIdx === selectedDonorIdx;
+          const isHovered = hoveredDonorIdx >= 0 && dIdx === hoveredDonorIdx;
           let focusBoost = 0;
 
           if (isSelected || isHovered) {
-            focusBoost = 0.58 + 0.35 * Math.sin(elapsed * 7.5);
-            if (pt.kind === "LIGHT") ch = "@";
-          } else if (selectedDonorId && pt.donorId) {
+            focusBoost = focusPulse;
+            if (kind === KIND_LIGHT) chCode = 64;
+          } else if (hasSelection && dIdx >= 0) {
             lum *= 0.62;
           }
 
-          const intensity = (pt.lit ? 0.35 : 0.22) + 0.78 * clamp(lum, 0, 1.15) + 0.6 * spawnFlash + focusBoost;
+          const intensity = (isLit ? 0.35 : 0.22) + 0.78 * clamp(lum, 0, 1.15) + 0.6 * spawnFlash + focusBoost;
           const whiteMix = clamp(spawnFlash + focusBoost * 0.45, 0, 1);
-          const baseR = pt.r + (1.0 - pt.r) * whiteMix;
-          const baseG = pt.g + (1.0 - pt.g) * whiteMix;
-          const baseB = pt.b + (1.0 - pt.b) * whiteMix;
+          const pr = ptR[i], pg = ptG[i], pb = ptB[i];
+          const baseR = pr + (1.0 - pr) * whiteMix;
+          const baseG = pg + (1.0 - pg) * whiteMix;
+          const baseB = pb + (1.0 - pb) * whiteMix;
 
-          const r = Math.min(255, Math.round(baseR * 255 * intensity));
-          const g = Math.min(255, Math.round(baseG * 255 * intensity));
-          const b = Math.min(255, Math.round(baseB * 255 * intensity));
+          const r = Math.min(255, (baseR * 255 * intensity) | 0);
+          const g = Math.min(255, (baseG * 255 * intensity) | 0);
+          const b = Math.min(255, (baseB * 255 * intensity) | 0);
 
-          charGrid[idx] = ch;
-          colorGrid[idx] = `rgb(${r},${g},${b})`;
+          charGrid[idx] = chCode;
+          colorGrid[idx] = (r << 16) | (g << 8) | b;
         }
 
         screenHitList = [];
         let selectedScreenPos = null;
 
         if (elapsed >= T_ORNAMENTS[0]) {
-          for (const bt of bulbTargets) {
-            const p = project(bt.x, bt.y, bt.z, cosA, sinA);
+          for (let i = 0; i < bulbTargets.length; i++) {
+            const bt = bulbTargets[i];
+            const p = project(bt.x, bt.y, bt.z, cosA, sinA, activeCamZ, activeFov);
             if (p && p.pz < 3.48) {
               screenHitList.push({ donor: bt.donor, x: p.sx * CW, y: p.sy * CH, r: bt.radius });
             }
           }
-          for (const anc of donorAnchors) {
-            const p = project(anc.x, anc.y, anc.z, cosA, sinA);
+          for (let i = 0; i < donorAnchors.length; i++) {
+            const anc = donorAnchors[i];
+            const p = project(anc.x, anc.y, anc.z, cosA, sinA, activeCamZ, activeFov);
             if (!p) continue;
             if (p.pz < 3.48) {
               screenHitList.push({ donor: anc.donor, x: p.sx * CW, y: p.sy * CH, r: anc.radius });
@@ -2098,21 +2235,21 @@
         if (selectedScreenPos) {
           const sc = Math.round(selectedScreenPos.sx);
           const sr = Math.round(selectedScreenPos.sy);
-          const blink = Math.sin(elapsed * 8) > -0.3;
-          if (blink) {
+          if (Math.sin(elapsed * 8) > -0.3) {
             const offsets = [[0, -2], [0, 2], [-3, 0], [3, 0]];
             for (const [dc, dr] of offsets) {
               const cc = sc + dc, rr = sr + dr;
               if (cc >= 0 && cc < COLS && rr >= 0 && rr < ROWS) {
-                charGrid[rr * COLS + cc] = "+";
-                colorGrid[rr * COLS + cc] = "rgb(255, 240, 130)";
+                const idx = rr * COLS + cc;
+                charGrid[idx] = 43; // '+'
+                colorGrid[idx] = (255 << 16) | (240 << 8) | 130;
               }
             }
           }
         }
 
         if (elapsed >= T_STAR) {
-          const starProj = project(0, Y1 + 0.14, 0, cosA, sinA);
+          const starProj = project(0, Y1 + 0.14, 0, cosA, sinA, activeCamZ, activeFov);
           if (starProj) {
             if (HAS_STAR) {
               const on = smoothstep((elapsed - T_STAR) / 0.35);
@@ -2123,8 +2260,9 @@
               const sc = Math.round(starProj.sx);
               const sr = Math.round(starProj.sy);
               if (sc >= 0 && sc < COLS && sr >= 0 && sr < ROWS) {
-                charGrid[sr * COLS + sc] = "+";
-                colorGrid[sr * COLS + sc] = "rgb(95, 108, 135)";
+                const idx = sr * COLS + sc;
+                charGrid[idx] = 43; // '+'
+                colorGrid[idx] = (95 << 16) | (108 << 8) | 135;
               }
             }
           }
@@ -2137,19 +2275,22 @@
 
           for (let r = msgRow - 1; r <= msgRow + 1; r++) {
             for (let c = Math.max(0, x0 - 2); c < Math.min(COLS, x0 + shown + 2); c++) {
-              charGrid[r * COLS + c] = "";
+              charGrid[r * COLS + c] = 0;
             }
           }
 
           const palette = [[255, 75, 85], [255, 210, 75], [75, 220, 115]];
           for (let i = 0; i < shown; i++) {
-            const ch = CAMPAIGN.message[i];
-            if (ch !== " ") {
+            const chCode = CAMPAIGN.message.charCodeAt(i);
+            if (chCode !== 32) {
               const tint = palette[(Math.floor(i / 2) + Math.floor(elapsed * 1.5)) % 3];
               const glow = 0.85 + 0.25 * Math.sin(elapsed * 5 + i * 0.4);
               const idx = msgRow * COLS + (x0 + i);
-              charGrid[idx] = ch;
-              colorGrid[idx] = `rgb(${Math.min(255, Math.round(tint[0] * glow))},${Math.min(255, Math.round(tint[1] * glow))},${Math.min(255, Math.round(tint[2] * glow))})`;
+              charGrid[idx] = chCode;
+              const mr = Math.min(255, (tint[0] * glow) | 0);
+              const mg = Math.min(255, (tint[1] * glow) | 0);
+              const mb = Math.min(255, (tint[2] * glow) | 0);
+              colorGrid[idx] = (mr << 16) | (mg << 8) | mb;
             }
           }
         }
@@ -2161,21 +2302,22 @@
         ctx.textBaseline = "top";
 
         let letterCount = 0;
-        let lastColor = "";
+        let lastPackedCol = -1;
 
         for (let r = 0; r < ROWS; r++) {
           const py = r * CH;
+          const rowOffset = r * COLS;
           for (let c = 0; c < COLS; c++) {
-            const idx = r * COLS + c;
-            const ch = charGrid[idx];
-            if (!ch) continue;
+            const idx = rowOffset + c;
+            const chCode = charGrid[idx];
+            if (chCode === 0) continue;
             letterCount++;
-            const colStr = colorGrid[idx];
-            if (colStr !== lastColor) {
-              ctx.fillStyle = colStr;
-              lastColor = colStr;
+            const packedCol = colorGrid[idx];
+            if (packedCol !== lastPackedCol) {
+              ctx.fillStyle = getColorCss(packedCol);
+              lastPackedCol = packedCol;
             }
-            ctx.fillText(ch, c * CW, py);
+            ctx.fillText(charStrCache[chCode], c * CW, py);
           }
         }
 
@@ -2183,7 +2325,7 @@
           const tag = `◄ [${selectedScreenPos.donor.id}] ${selectedScreenPos.donor.name}`;
           const tx = clamp((selectedScreenPos.sx + 3) * CW, 12, COLS * CW - tag.length * 7.6 - 12);
           const ty = clamp((selectedScreenPos.sy - 0.5) * CH, 18, (ROWS - 8) * CH);
-          ctx.fillStyle = "rgba(10, 14, 24, 0.9)";
+          ctx.fillStyle = "rgba(10, 14, 24, 0.92)";
           ctx.fillRect(tx - 4, ty - 2, tag.length * 7.5 + 8, 18);
           ctx.strokeStyle = "#ffc45a";
           ctx.strokeRect(tx - 4, ty - 2, tag.length * 7.5 + 8, 18);
@@ -2192,10 +2334,8 @@
           ctx.fillText(tag, tx, ty);
         }
 
-        // Thông số HUD góc dưới trái (tăng cỡ chữ trên điện thoại để dễ đọc)
-        const mobHud = isMobileView();
-        const hudFontPx = mobHud ? 15 : 12;
-        const hudStep = mobHud ? 1.45 : 1.3;
+        const hudFontPx = mob ? 15 : 12;
+        const hudStep = mob ? 1.45 : 1.3;
         ctx.font = `${hudFontPx}px Consolas, Menlo, "Courier New", monospace`;
 
         ctx.fillStyle = "#ffc45a";

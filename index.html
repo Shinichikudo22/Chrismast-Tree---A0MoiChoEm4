@@ -64,17 +64,6 @@
       object-fit: contain;
       display: block;
       border-radius: 4px;
-      cursor: pointer;
-    }
-    #clubLogoFallback {
-      display: none;
-      font-size: 11px;
-      color: #ffe28a;
-      background: rgba(255, 196, 90, 0.14);
-      border: 1px dashed rgba(255, 196, 90, 0.55);
-      padding: 4px 8px;
-      border-radius: 6px;
-      cursor: pointer;
     }
     #clubLogoBox span.club-name {
       font-size: 11.5px;
@@ -751,26 +740,11 @@
       ];
 
       // =====================================================================
-      // XỬ LÝ LOGO CLB (TỰ DÒ ĐUÔI FILE + CHO CHỌN ẢNH TRỰC TIẾP NẾU THIẾU)
+     // XỬ LÝ LOGO CLB (CHỈ HIỂN THỊ ẢNH TỪ THƯ MỤC CODE CỦA CHỦ SỞ HỮU)
       // =====================================================================
       const clubLogoImg = document.getElementById("clubLogoImg");
-      const clubLogoFallback = document.getElementById("clubLogoFallback");
-      const logoFileInput = document.getElementById("logoFileInput");
-      const logoCandidates = [
-        "logo-clb.png",
-        "logo-clb.jpg",
-        "logo-clb.jpeg",
-        "logo-clb.webp",
-        "logo-clb.png.png",
-        "logo.png",
-        "logo.jpg"
-      ];
+      const logoCandidates = ["logo-clb.png", "logo-clb.jpg", "logo-clb.jpeg", "logo-clb.webp"];
       let logoTryIdx = 0;
-
-      try {
-        const savedLogo = localStorage.getItem("clb_logo_dataurl");
-        if (savedLogo) clubLogoImg.src = savedLogo;
-      } catch (_) {}
 
       clubLogoImg.onerror = () => {
         logoTryIdx++;
@@ -778,25 +752,8 @@
           clubLogoImg.src = logoCandidates[logoTryIdx];
         } else {
           clubLogoImg.style.display = "none";
-          clubLogoFallback.style.display = "inline-block";
         }
       };
-      clubLogoImg.onload = () => {
-        clubLogoImg.style.display = "block";
-        clubLogoFallback.style.display = "none";
-      };
-      clubLogoFallback.addEventListener("click", () => logoFileInput.click());
-      clubLogoImg.addEventListener("click", () => logoFileInput.click());
-      logoFileInput.addEventListener("change", (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          clubLogoImg.src = reader.result;
-          try { localStorage.setItem("clb_logo_dataurl", reader.result); } catch (_) {}
-        };
-        reader.readAsDataURL(file);
-      });
 
       const examCharmItems = EXAM_CHARMS.map(item => ({ ...item, type: "qua_mon" }));
       const allSearchableItems = [...DONORS, ...examCharmItems];

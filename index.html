@@ -825,23 +825,23 @@
 
       // DANH SÁCH GẮN TRỰC TIẾP LÊN CÂY THÔNG (TỐI ĐA 137 SUẤT MS)
       const DONORS = [
-        { id: "MS01", type: "charm",    name: "Minh Suông",   color: "jade",   wish: "Chúc chiến dịch gây quỹ thành công rực rỡ và lan tỏa thật nhiều yêu thương mùa Giáng Sinh!" },
-        { id: "MS02", type: "light",    name: "Hồng Ly",      color: "gold",   wish: "Mong mọi điều bình an, may mắn và hạnh phúc sẽ luôn mỉm cười với tất cả chúng ta." },
-        { id: "MS03", type: "gift",     name: "Mạnh Sơn",     color: "red",    wish: "Gửi một hộp quà nhỏ góp sức cùng chương trình. Merry Christmas 2026!" },
+        { id: "MS01", type: "charm",    name: "HLy",   color: "jade",   wish: "Chúc chiến dịch gây quỹ thành công rực rỡ và lan tỏa thật nhiều yêu thương mùa Giáng Sinh!" },
+        { id: "MS02", type: "light",    name: "VViệt",      color: "gold",   wish: "Mong mọi điều bình an, may mắn và hạnh phúc sẽ luôn mỉm cười với tất cả chúng ta." },
+        { id: "MS03", type: "gift",     name: "M Sơn",     color: "red",    wish: "Gửi một hộp quà nhỏ góp sức cùng chương trình. Merry Christmas 2026!" },
         { id: "MS04", type: "stocking", name: "Lớp YK22C",    color: "red",    wish: "Chúc các bạn sinh viên luôn vững tay nghề, ấm áp và tràn đầy nhiệt huyết!" },
         { id: "MS05", type: "bauble",   name: "CLB Hiến Máu", color: "gold",   wish: "Mỗi ngọn đèn sáng lên là một trái tim sẻ chia được kết nối." }
 
-        // { id: "MS06", type: "light",    name: "Người ủng hộ #06", color: "gold",   wish: "Chúc Giáng Sinh an lành và ấm áp!" },
-        // { id: "MS07", type: "charm",    name: "Người ủng hộ #07", color: "gold",   wish: "Ước cho kỳ thi sắp tới qua môn thuận lợi và đạt kết quả cao!" },
-        // { id: "MS08", type: "bauble",   name: "Người ủng hộ #08", color: "red",    wish: "Góp một quả châu đỏ cho cây thông thêm rực rỡ!" },
-        // { id: "MS09", type: "gift",     name: "Người ủng hộ #09", color: "green",  wish: "Chúc mọi điều tốt đẹp nhất sẽ đến với mọi người." },
-        // { id: "MS10", type: "stocking", name: "Người ủng hộ #10", color: "red",    wish: "Treo chiếc tất nhỏ gửi gắm niềm vui mùa lễ hội!" }
+        // { id: "MS06", type: "light",    name: "Người ủng hộ #06",   wish: "Chúc Giáng Sinh an lành và ấm áp!" },
+        // { id: "MS07", type: "charm",    name: "Người ủng hộ #07",   wish: "Ước cho kỳ thi sắp tới qua môn thuận lợi và đạt kết quả cao!" },
+        // { id: "MS08", type: "bauble",   name: "Người ủng hộ #08",    wish: "Góp một quả châu đỏ cho cây thông thêm rực rỡ!" },
+        // { id: "MS09", type: "gift",     name: "Người ủng hộ #09",   wish: "Chúc mọi điều tốt đẹp nhất sẽ đến với mọi người." },
+        // { id: "MS10", type: "stocking", name: "Người ủng hộ #10",    wish: "Treo chiếc tất nhỏ gửi gắm niềm vui mùa lễ hội!" }
       ];
 
       // KHO DỰ TRỮ BÙA QUA MÔN (KHÔNG GIỚI HẠN, KHÔNG GẮN LÊN CÂY THÔNG)
       const EXAM_CHARMS = [
-        { id: "QM01", name: "Minh Suông",   wish: "Cầu cho kỳ thi cuối kỳ suôn sẻ, tất cả các môn đều qua nhẹ nhàng, điểm cao ngoài mong đợi!" },
-        { id: "QM02", name: "Hồng Ly",      wish: "Chúc ôn đâu trúng đó, vào phòng thi bình tĩnh tự tin, làm bài trôi chảy đạt A+!" },
+        { id: "QM01", name: "VViệt",   wish: "Cầu cho kỳ thi cuối kỳ suôn sẻ, tất cả các môn đều qua nhẹ nhàng, điểm cao ngoài mong đợi!" },
+        { id: "QM02", name: "HLy",      wish: "Chúc ôn đâu trúng đó, vào phòng thi bình tĩnh tự tin, làm bài trôi chảy đạt A+!" },
         { id: "QM03", name: "Tổ 1 YK22C",   wish: "Đêm ôn bài tỉnh táo, sáng thi minh mẫn, cả tổ cùng nắm tay nhau qua môn rực rỡ!" }
 
         // { id: "QM04", name: "Người mua #04", wish: "Cầu cho tất cả các môn học kỳ này đều qua thẳng một lèo, không phải gặp lại môn nào!" },
@@ -862,6 +862,31 @@
         // { id: "QM19", name: "Người mua #19", wish: "Chúc phòng thi mát mẻ, đề thi thân thiện, kiến thức đã ôn hiện ra rõ mồn một!" },
         // { id: "QM20", name: "Người mua #20", wish: "Bình tĩnh – Tự tin – Trúng tủ – Qua môn điểm cao!" }
       ];
+      // =====================================================================
+      // TỰ ĐỘNG PHỐI MÀU HÀI HÒA THEO TỶ LỆ CHUẨN (KHÔNG CẦN NHẬP COLOR)
+      // =====================================================================
+      const AUTO_COLOR_CYCLES = {
+        // Quả châu (30 suất): tỷ lệ 8 đỏ : 8 vàng : 6 bạc : 4 xanh dương : 4 xanh ngọc
+        bauble:   ["red", "gold", "silver", "blue", "red", "gold", "jade", "silver", "red", "gold", "blue", "silver", "red", "gold", "jade"],
+        // Hộp quà (20 suất): 8 hộp vòng trong + 12 hộp vòng ngoài xen kẽ nóng - lạnh
+        gift:     ["red", "green", "gold", "blue", "red", "jade", "gold", "green", "red", "silver", "gold", "green", "blue", "red", "gold", "jade", "green", "silver", "red", "blue"],
+        // Tất Giáng Sinh (20 suất): đỏ chủ đạo xen kẽ vàng, xanh lá, xanh dương
+        stocking: ["red", "gold", "green", "red", "blue", "gold", "red", "green", "red", "gold"],
+        // Bùa treo cây (25 suất): xoay đều 3 mẫu Bình An (jade) -> Tài Lộc (gold) -> May Mắn (red)
+        charm:    ["jade", "gold", "red"],
+        // Chùm 4 đèn (42 suất): vàng ấm chủ đạo xen kẽ vàng rực, đỏ, xanh dương, trắng
+        light:    ["warm", "gold", "red", "warm", "blue", "gold", "white", "red", "warm", "blue"]
+      };
+
+      const typeColorCounters = {};
+      DONORS.forEach(d => {
+        const idx = typeColorCounters[d.type] || 0;
+        typeColorCounters[d.type] = idx + 1;
+        if (!d.color) {
+          const cycle = AUTO_COLOR_CYCLES[d.type] || ["gold"];
+          d.color = cycle[idx % cycle.length];
+        }
+      });
 
       // =====================================================================
       // XỬ LÝ LOGO CLB (CHỈ HIỂN THỊ ẢNH TỪ THƯ MỤC CODE CỦA CHỦ SỞ HỮU)
